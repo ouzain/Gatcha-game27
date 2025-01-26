@@ -10,6 +10,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @NoArgsConstructor(force = true)
@@ -21,9 +22,10 @@ public class Player {
     private String id;
     @NotBlank
     private final String username;
-    @NotNull
+    private String token;
     private final int level;
     private final int experience;
+    private List<Integer> monsterList;
 
 
     /**
@@ -33,15 +35,16 @@ public class Player {
     @PersistenceConstructor
     public Player(String id,
                   String username,
-                  String password,
                   String token,
-                  LocalDateTime tokenExpiration,
                   int level,
-                  int experience) {
+                  int experience,
+                  List<Integer> monsterList) {
         this.id = id;
         this.username = username;
+        this.token = token;
         this.level = level;
         this.experience = experience;
+        this.monsterList = monsterList;
     }
 
     public String getId() {
@@ -52,6 +55,8 @@ public class Player {
         return username;
     }
 
+    public  String getToken(){return token;}
+
     public int getLevel() {
         return level;
     }
@@ -60,11 +65,16 @@ public class Player {
         return experience;
     }
 
+    public List<Integer> getMonsterList(){return monsterList;}
+
+
     private Player(Builder builder) {
         this.id = builder.id;
         this.username = builder.username;
+        this.token =builder.token;
         this.level = builder.level;
         this.experience = builder.experience;
+        this.monsterList=builder.monsterList;
     }
 
 
@@ -72,10 +82,10 @@ public class Player {
     public static final class Builder {
         private String id;
         private String username;
-        private String password;
         private String token;
         private int level;
         private int experience;
+        private List<Integer> monsterList;
 
         private Builder(){}
         public static Builder builder() {
@@ -92,10 +102,6 @@ public class Player {
             return this;
         }
 
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
 
         public Builder token(String token) {
             this.token = token;
@@ -113,6 +119,11 @@ public class Player {
             return this;
         }
 
+        public Builder monsterList(List<Integer> monsterList){
+            this.monsterList=monsterList;
+            return  this;
+        }
+
 
         public Player build() {
             return new Player(this);
@@ -123,8 +134,10 @@ public class Player {
     public PlayerDto toPlayerDtoEntity(){
         return PlayerDto.Builder.builder()
                 .username(this.username)
+                .token(this.token)
                 .level(this.level)
                 .experience(this.experience)
+                .monsterList(this.monsterList)
                 .build();
     }
 }

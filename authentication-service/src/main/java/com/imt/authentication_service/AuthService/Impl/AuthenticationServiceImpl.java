@@ -24,6 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String token = generateToken(username);
             authEntity.setToken(token);
             authEntity.setTokenExpiration(calculateTokenExpiration());
+            authRepository.save(authEntity);
 
             return token;
         } else {

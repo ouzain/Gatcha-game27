@@ -20,10 +20,14 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
         Player updatedPlayer = Player.Builder.builder()
                 .id(foundPlayer.getId())
                 .username(player.getUsername() != null ? player.getUsername() : foundPlayer.getUsername())
+                .token(player.getToken() !=null ? player.getToken() : foundPlayer.getToken())
                 .level(player.getLevel() != 0 ? player.getLevel() : foundPlayer.getLevel())
                 .experience(player.getExperience() != 0
                         ? player.getExperience()
                         : foundPlayer.getExperience())
+                .monsterList(player.getMonsterList() != null && !player.getMonsterList().isEmpty()
+                        ? player.getMonsterList()
+                        : foundPlayer.getMonsterList())
                 .build();
 
         playerRepository.save(updatedPlayer);

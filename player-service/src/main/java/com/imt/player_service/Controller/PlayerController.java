@@ -35,15 +35,24 @@ public class PlayerController {
     public  void addPlayer(@RequestBody PlayerDto playerDto)  {
 
         //TODO : Verifier sur userDto n'est pas null ou invalid
-        Player player = playerDto.toPlayerEntity();
 
-        this.addPlayerService.execute(player);
-
-        // Envoyer les données d'authentification à l'api d'authentification
+        // Envoyer les données d'authentification à l'api d'authentification pour sauvegarder ces données dans sa base
         AuthServiceClient.AuthRequest authRequest = new AuthServiceClient.AuthRequest();
         authRequest.setUsername(playerDto.getUsername());
         authRequest.setPassword(playerDto.getPassword());
         authServiceClient.registerPlayerCredentials(authRequest);
+
+        //Authentifier le player afin qu'il puisse récupérer son token d'authentification
+        String token = authServiceClient.login(playerDto.getUsername(), playerDto.getPassword()).getBody();
+        Player player = Player.Builder.builder()
+                .username(playerDto.getUsername())
+                .token(token)
+                .level(playerDto.getLevel())
+                .experience(playerDto.getExperience())
+                .build();
+
+        addPlayerService.execute(player);
+
     }
 
     @GetMapping(value = "/get-user", produces = {MediaType.APPLICATION_JSON_VALUE})

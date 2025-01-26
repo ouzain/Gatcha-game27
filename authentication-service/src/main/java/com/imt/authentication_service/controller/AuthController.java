@@ -57,6 +57,7 @@ public class AuthController {
 
         //TODO : Verifier si le Dto n'est pas null ou invalid
         AuthEntity player = authEntityDto.toAuthEntity();
+
         this.addService.execute(player);
     }
 

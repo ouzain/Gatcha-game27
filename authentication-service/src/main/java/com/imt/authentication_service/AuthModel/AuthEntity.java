@@ -3,6 +3,7 @@ package com.imt.authentication_service.AuthModel;
 import com.imt.authentication_service.Dto.AuthEntityDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AuthEntity {
 
+    @Id
+    private String id;
     @NotBlank
     private  String username;
     @NotBlank
