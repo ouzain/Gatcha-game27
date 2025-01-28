@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.imt.player_service.Model.Player;
+import lombok.Builder;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serializable;
@@ -129,4 +130,7 @@ public class PlayerDto implements Serializable {
                 .monsterList(this.monsterList)
                 .build();
     }
+
+
+
 }
