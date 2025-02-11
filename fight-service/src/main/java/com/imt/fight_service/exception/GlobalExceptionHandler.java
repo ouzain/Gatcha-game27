@@ -1,4 +1,4 @@
-package com.imt.player_service.Exception;
+package com.imt.fight_service.exception;
 
 public class GlobalExceptionHandler {
 }
