@@ -14,4 +14,14 @@ public class GetPlayerServiceImpl extends AbstractPlayerService implements GetPl
         return this.playerRepository.findByUsername(username);
     }
 
+    /**
+     * @param token
+     * @return
+     */
+    @Override
+    public Player byToken(String token) {
+        //TODO : Faire le check au cas où le User serait vide ie Null
+        return this.playerRepository.findByToken(token);
+    }
+
 }

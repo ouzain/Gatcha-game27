@@ -11,6 +11,8 @@ public interface PlayerRepository extends MongoRepository<Player, String> {
 
     Player findByUsername(String username);
 
+    Player findByToken(String token);
+
 
 
 }

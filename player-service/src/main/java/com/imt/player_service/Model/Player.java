@@ -5,6 +5,7 @@ import com.imt.player_service.Dto.PlayerDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,13 +14,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+
 @NoArgsConstructor(force = true)
 @Document(collection = "users")
 
 public class Player {
 
     @Id
-    private String id;
+    private ObjectId id;
     @NotBlank
     private final String username;
     private String token;
@@ -32,14 +34,12 @@ public class Player {
      * Constructeur que Spring Data utilisera pour hydrater l'entité depuis la base.
      * Les noms et l'ordre des paramètres doivent correspondre aux champs.
      */
-    @PersistenceConstructor
-    public Player(String id,
-                  String username,
+
+    public Player(String username,
                   String token,
                   int level,
                   int experience,
                   List<Integer> monsterList) {
-        this.id = id;
         this.username = username;
         this.token = token;
         this.level = level;
@@ -47,7 +47,11 @@ public class Player {
         this.monsterList = monsterList;
     }
 
-    public String getId() {
+
+
+
+
+    public ObjectId getId() {
         return id;
     }
 
@@ -67,6 +71,10 @@ public class Player {
 
     public List<Integer> getMonsterList(){return monsterList;}
 
+    public void addMonster(Integer monsterId){
+        this.monsterList.add(monsterId);
+    }
+
 
     private Player(Builder builder) {
         this.id = builder.id;
@@ -80,7 +88,7 @@ public class Player {
 
 
     public static final class Builder {
-        private String id;
+        private ObjectId id;
         private String username;
         private String token;
         private int level;
@@ -92,7 +100,7 @@ public class Player {
             return new Builder();
         }
 
-        public Builder id(String id) {
+        public Builder id(ObjectId id) {
             this.id = id;
             return this;
         }

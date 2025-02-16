@@ -1,5 +1,7 @@
 package com.imt.player_service.OpenFeing;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +20,15 @@ public interface AuthServiceClient {
 
     @PostMapping(value = "/api-auth/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    void registerPlayerCredentials(@RequestBody AuthRequest authEntityDto);
+    ResponseEntity<String> registerPlayerCredentials(@RequestBody AuthRequest authEntityDto);
     class AuthRequest {
+
+        @NotBlank
         private String username;
+
+
+        @NotBlank
+        @Size(min = 4, message = "Le mot de passe doit comporter au moins 6 caractères.")
         private String password;
 
         public AuthRequest() {
