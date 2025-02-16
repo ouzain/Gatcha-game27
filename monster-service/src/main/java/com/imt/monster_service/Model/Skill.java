@@ -1,10 +1,9 @@
 package com.imt.monster_service.Model;
 
-import com.imt.monster_service.Dto.RatioDto;
 import com.imt.monster_service.Dto.SkillDto;
 
 public class Skill {
-    private int num;
+    private String name;
     private int dmg;
     private Ratio ratio;
     private int cooldown;
@@ -12,12 +11,12 @@ public class Skill {
 
     public Skill() {}
 
-    public int getNum() {
-        return num;
+    public String getName() {
+        return name;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getDmg() {
@@ -28,12 +27,12 @@ public class Skill {
         this.dmg = dmg;
     }
 
-    public Ratio getRatio() {
-        return ratio;
-    }
-
     public void setRatio(Ratio ratio) {
         this.ratio = ratio;
+    }
+
+    public Ratio getRatio() {
+        return ratio;
     }
 
     public int getCooldown() {
@@ -57,17 +56,16 @@ public class Skill {
      */
     public SkillDto toSkillDto() {
         return SkillDto.Builder.builder()
-                .num(this.num)
+                .name(this.name)
                 .dmg(this.dmg)
                 .cooldown(this.cooldown)
                 .lvlMax(this.lvlMax)
                 // Conversion Ratio -> RatioDto (si ratio != null)
-                .ratio(this.ratio != null ? this.ratio.toRatioDto() : null)
                 .build();
     }
 
     public static final class Builder {
-        private int num;
+        private String name;
         private int dmg;
         private Ratio ratio;
         private int cooldown;
@@ -81,8 +79,8 @@ public class Skill {
             return new Builder();
         }
 
-        public Builder num(int num) {
-            this.num = num;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -91,10 +89,11 @@ public class Skill {
             return this;
         }
 
-        public Builder ratio(Ratio ratio) {
-            this.ratio = ratio;
+        public Builder ratio(Ratio ratio){
+            this.ratio=ratio;
             return this;
         }
+
 
         public Builder cooldown(int cooldown) {
             this.cooldown = cooldown;
@@ -108,7 +107,7 @@ public class Skill {
 
         public Skill build() {
             Skill skill = new Skill();
-            skill.setNum(this.num);
+            skill.setName(this.name);
             skill.setDmg(this.dmg);
             skill.setRatio(this.ratio);
             skill.setCooldown(this.cooldown);

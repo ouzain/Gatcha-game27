@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class SkillDto implements Serializable {
 
     @JsonProperty("num")
-    protected int num;
+    protected String name;
 
     @JsonProperty("dmg")
     protected int dmg;
@@ -36,15 +36,15 @@ public class SkillDto implements Serializable {
     }
 
     private SkillDto(Builder builder) {
-        this.num = builder.num;
+        this.name = builder.name;
         this.dmg = builder.dmg;
         this.ratio = builder.ratio;
         this.cooldown = builder.cooldown;
         this.lvlMax = builder.lvlMax;
     }
 
-    public int getNum() {
-        return num;
+    public String getName() {
+        return name;
     }
 
     public int getDmg() {
@@ -76,7 +76,7 @@ public class SkillDto implements Serializable {
     public Skill toSkillEntity() {
         return Skill.Builder
                 .builder()
-                .num(this.num)
+                .name(this.name)
                 .dmg(this.dmg)
                 .ratio(this.ratio.toRatioEntity())
                 .cooldown(this.cooldown)
@@ -85,7 +85,7 @@ public class SkillDto implements Serializable {
     }
 
     public static final class Builder {
-        private int num;
+        private String name;
         private int dmg;
         private RatioDto ratio;
         private int cooldown;
@@ -97,8 +97,8 @@ public class SkillDto implements Serializable {
             return new Builder();
         }
 
-        public Builder num(int num) {
-            this.num = num;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
