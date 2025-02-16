@@ -11,6 +11,8 @@ public class Monster {
 
     @Id
     private Integer id;
+    // id pour faciliter la mani
+    private String
     private String element;
     private int hp;
     private int atk;

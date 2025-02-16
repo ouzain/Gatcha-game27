@@ -35,9 +35,15 @@ public class MonsterController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Monster addMonster(@RequestBody Monster monster) {
-        return monsterService.addMonster(monster);
+    public Integer addMonster(@RequestBody MonsterDto monsterDto) {
+        // Convertir le DTO en entité et ajouter le monstre
+        Monster monster = monsterDto.toMonsterEntity();
+        monsterService.addMonster(monster);
+
+        // Retourner l'ID du monstre
+        return monster.getId();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMonster(@PathVariable int id) {

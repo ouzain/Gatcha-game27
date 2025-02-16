@@ -19,10 +19,6 @@ public interface MonsterServiceClient {
      * Suppose que l’API Monstre renvoie un objet Monster en JSON
      */
     @PostMapping(value = "/monsters/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Monster createMonster(@RequestBody BaseMonster baseMonster);
+    Integer addMonster(@RequestBody BaseMonster baseMonster);
 
-    // ajouter d’autres méthodes :
-    // - @GetMapping("/monsters/{id}")
-    // - @DeleteMapping("/monsters/{id}")
-    // etc.
 }
