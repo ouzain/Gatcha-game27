@@ -3,20 +3,20 @@ package com.imt.monster_service.Model;
 import com.imt.monster_service.Dto.SkillDto;
 
 public class Skill {
-    private int num;
+    private String name;
     private int dmg;
-    private double ratio;
+    private Ratio ratio;
     private int cooldown;
     private int lvlMax;
 
     public Skill() {}
 
-    public int getNum() {
-        return num;
+    public String getName() {
+        return name;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getDmg() {
@@ -27,6 +27,13 @@ public class Skill {
         this.dmg = dmg;
     }
 
+    public void setRatio(Ratio ratio) {
+        this.ratio = ratio;
+    }
+
+    public Ratio getRatio() {
+        return ratio;
+    }
 
     public int getCooldown() {
         return cooldown;
@@ -49,7 +56,7 @@ public class Skill {
      */
     public SkillDto toSkillDto() {
         return SkillDto.Builder.builder()
-                .num(this.num)
+                .name(this.name)
                 .dmg(this.dmg)
                 .cooldown(this.cooldown)
                 .lvlMax(this.lvlMax)
@@ -58,8 +65,9 @@ public class Skill {
     }
 
     public static final class Builder {
-        private int num;
+        private String name;
         private int dmg;
+        private Ratio ratio;
         private int cooldown;
         private int lvlMax;
 
@@ -71,13 +79,18 @@ public class Skill {
             return new Builder();
         }
 
-        public Builder num(int num) {
-            this.num = num;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
         public Builder dmg(int dmg) {
             this.dmg = dmg;
+            return this;
+        }
+
+        public Builder ratio(Ratio ratio){
+            this.ratio=ratio;
             return this;
         }
 
@@ -94,8 +107,9 @@ public class Skill {
 
         public Skill build() {
             Skill skill = new Skill();
-            skill.setNum(this.num);
+            skill.setName(this.name);
             skill.setDmg(this.dmg);
+            skill.setRatio(this.ratio);
             skill.setCooldown(this.cooldown);
             skill.setLvlMax(this.lvlMax);
             return skill;

@@ -1,11 +1,10 @@
-package com.imt.invocation_service.CrudService;
+package com.imt.invocation_service.Service;
 
-import com.imt.invocation_service.InvoModel.Invocation;
 import com.imt.invocation_service.InvoModel.Invocation;
 
 import java.util.List;
 
-public interface AddInvocation {
+public interface InvocationService {
     public void execute(Invocation invocation);
 
     List<Invocation> getAllInvocations();

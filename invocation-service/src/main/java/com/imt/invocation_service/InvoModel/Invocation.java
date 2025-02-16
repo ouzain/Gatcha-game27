@@ -1,19 +1,17 @@
 package com.imt.invocation_service.InvoModel;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Document(collection = "invocations")
 public class Invocation {
 
     @Id
-    private Integer id;
+    private String id;
     private String playerId;
     private String baseMonsterId; // Référence vers l'ID du monstre de base
     private Integer createdMonsterId; // ID créé par l'API Monstres
@@ -21,17 +19,15 @@ public class Invocation {
     private String status; // PENDING, FINISHED, ERROR, etc.
     private List<String> logs = new ArrayList<>();
 
-    // Constructors, getters, setters
-
     public void addLog(String log) {
         this.logs.add(log);
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -81,5 +77,76 @@ public class Invocation {
 
     public void setLogs(List<String> logs) {
         this.logs = logs;
+    }
+
+    /**
+     * Builder pour la classe Invocation
+     */
+    public static class Builder {
+        private String id;
+        private String playerId;
+        private String baseMonsterId;
+        private Integer createdMonsterId;
+        private LocalDateTime createdAt;
+        private String status;
+        private List<String> logs = new ArrayList<>();
+
+        public Builder() {
+            // Constructeur vide
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder playerId(String playerId) {
+            this.playerId = playerId;
+            return this;
+        }
+
+        public Builder baseMonsterId(String baseMonsterId) {
+            this.baseMonsterId = baseMonsterId;
+            return this;
+        }
+
+        public Builder createdMonsterId(Integer createdMonsterId) {
+            this.createdMonsterId = createdMonsterId;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder logs(List<String> logs) {
+            this.logs = logs;
+            return this;
+        }
+
+        /**
+         * Construit et retourne une instance de Invocation
+         */
+        public Invocation build() {
+            Invocation invocation = new Invocation();
+            invocation.setId(this.id);
+            invocation.setPlayerId(this.playerId);
+            invocation.setBaseMonsterId(this.baseMonsterId);
+            invocation.setCreatedMonsterId(this.createdMonsterId);
+            invocation.setCreatedAt(this.createdAt);
+            invocation.setStatus(this.status);
+            invocation.setLogs(this.logs);
+            return invocation;
+        }
     }
 }
