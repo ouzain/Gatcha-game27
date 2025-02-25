@@ -1,38 +1,46 @@
-package com.imt.monster_service.Model;
+package com.imt.invocation_service.InvoModel;
 
-import com.imt.monster_service.Dto.MonsterDto;
-import com.imt.monster_service.Dto.SkillDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
-@Document(collection = "monsters")
-public class Monster {
+@Document(collection = "base_monsters")
+public class BaseMonster {
 
     @Id
     private Integer id;
-    // id pour faciliter la mani
-    private String
-    private String element;
+    private String name;
+    private String element; // "feu", "eau", "vent", etc.
     private int hp;
     private int atk;
     private int def;
-    private int vit;
-    private double lootRate;
-    private List<Skill> skills;
+    private int speed;
+    private double invocationRate; // probabilité d'invocation en %
+    private List<Skill> skills; // Vos compétences de base
 
-    public Monster() {}
+    public BaseMonster() {
+    }
 
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getElement() {
         return element;
     }
+
     public void setElement(String element) {
         this.element = element;
     }
@@ -40,6 +48,7 @@ public class Monster {
     public int getHp() {
         return hp;
     }
+
     public void setHp(int hp) {
         this.hp = hp;
     }
@@ -47,6 +56,7 @@ public class Monster {
     public int getAtk() {
         return atk;
     }
+
     public void setAtk(int atk) {
         this.atk = atk;
     }
@@ -54,51 +64,60 @@ public class Monster {
     public int getDef() {
         return def;
     }
+
     public void setDef(int def) {
         this.def = def;
     }
 
-    public int getVit() {
-        return vit;
-    }
-    public void setVit(int vit) {
-        this.vit = vit;
+    public int getSpeed() {
+        return speed;
     }
 
-    public double getLootRate() {
-        return lootRate;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
-    public void setLootRate(double lootRate) {
-        this.lootRate = lootRate;
+
+    public double getInvocationRate() {
+        return invocationRate;
+    }
+
+    public void setInvocationRate(double invocationRate) {
+        this.invocationRate = invocationRate;
     }
 
     public List<Skill> getSkills() {
         return skills;
     }
+
     public void setSkills(List<Skill> skills) {
         this.skills = skills;
     }
 
-    public static final class Builder {
+    /**
+     * Builder pour la classe BaseMonster
+     */
+    public static class Builder {
         private Integer id;
+        private String name;
         private String element;
         private int hp;
         private int atk;
         private int def;
-        private int vit;
-        private double lootRate;
+        private int speed;
+        private double invocationRate;
         private List<Skill> skills;
 
-        // Constructeur privé
-        private Builder() {}
-
-        // Méthode statique d'entrée
-        public static Builder builder() {
-            return new Builder();
+        public Builder() {
         }
 
+        // Méthodes de construction chaînées
         public Builder id(Integer id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -122,13 +141,13 @@ public class Monster {
             return this;
         }
 
-        public Builder vit(int vit) {
-            this.vit = vit;
+        public Builder speed(int speed) {
+            this.speed = speed;
             return this;
         }
 
-        public Builder lootRate(double lootRate) {
-            this.lootRate = lootRate;
+        public Builder invocationRate(double invocationRate) {
+            this.invocationRate = invocationRate;
             return this;
         }
 
@@ -137,40 +156,21 @@ public class Monster {
             return this;
         }
 
-        // Méthode build qui crée l'instance finale
-        public Monster build() {
-            Monster monster = new Monster();
+        /**
+         * Construit et retourne une instance de BaseMonster
+         */
+        public BaseMonster build() {
+            BaseMonster monster = new BaseMonster();
             monster.setId(this.id);
+            monster.setName(this.name);
             monster.setElement(this.element);
             monster.setHp(this.hp);
             monster.setAtk(this.atk);
             monster.setDef(this.def);
-            monster.setVit(this.vit);
-            monster.setLootRate(this.lootRate);
+            monster.setSpeed(this.speed);
+            monster.setInvocationRate(this.invocationRate);
             monster.setSkills(this.skills);
             return monster;
         }
     }
-
-
-    public MonsterDto toMonsterDto() {
-        List<SkillDto> skillDtos = null;
-        if (this.skills != null) {
-            skillDtos = this.skills.stream()
-                    .map(Skill::toSkillDto)
-                    .toList();
-        }
-
-        return MonsterDto.Builder.builder()
-                .id(this.id)
-                .element(this.element)
-                .hp(this.hp)
-                .atk(this.atk)
-                .def(this.def)
-                .vit(this.vit)
-                .lootRate(this.lootRate)
-                .skillDtos(skillDtos)
-                .build();
-    }
-
 }

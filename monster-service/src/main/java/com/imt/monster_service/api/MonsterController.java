@@ -5,6 +5,8 @@ import com.imt.monster_service.Model.Monster;
 import com.imt.monster_service.crudServices.MonsterService;
 import com.imt.monster_service.crudServices.UpdateMonsterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +33,17 @@ public class MonsterController {
         return monster.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Monster addMonster(@RequestBody Monster monster) {
-        return monsterService.addMonster(monster);
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Integer addMonster(@RequestBody MonsterDto monsterDto) {
+        // Convertir le DTO en entité et ajouter le monstre
+        Monster monster = monsterDto.toMonsterEntity();
+        monsterService.addMonster(monster);
+
+        // Retourner l'ID du monstre
+        return monster.getId();
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMonster(@PathVariable int id) {
