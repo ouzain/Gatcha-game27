@@ -2,12 +2,14 @@ package com.imt.player_service.Model;
 
 
 import com.imt.player_service.Dto.PlayerDto;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -22,11 +24,13 @@ public class Player {
 
     @Id
     private ObjectId id;
+    @Indexed(unique = true) // TO DO: Mis en place de gestion d'erreurs pour ca
     @NotBlank
     private final String username;
     private String token;
-    private final int level;
-    private final int experience;
+    @Max(50)
+    private int level = 1;
+    private double experience = 50.0;
     private List<Integer> monsterList;
 
 
@@ -38,7 +42,7 @@ public class Player {
     public Player(String username,
                   String token,
                   int level,
-                  int experience,
+                  double experience,
                   List<Integer> monsterList) {
         this.username = username;
         this.token = token;
@@ -65,7 +69,7 @@ public class Player {
         return level;
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return experience;
     }
 
@@ -85,6 +89,11 @@ public class Player {
         this.monsterList=builder.monsterList;
     }
 
+    public void setLevel(int i) {
+    }
+
+    public void setExperience(int i) {
+    }
 
 
     public static final class Builder {
@@ -92,7 +101,7 @@ public class Player {
         private String username;
         private String token;
         private int level;
-        private int experience;
+        private double experience;
         private List<Integer> monsterList;
 
         private Builder(){}
@@ -122,7 +131,7 @@ public class Player {
             return this;
         }
 
-        public Builder experience(int experience) {
+        public Builder experience(double experience) {
             this.experience = experience;
             return this;
         }

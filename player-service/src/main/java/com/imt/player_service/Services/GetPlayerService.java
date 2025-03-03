@@ -1,4 +1,4 @@
-package com.imt.player_service.Services.PlayerServices;
+package com.imt.player_service.Services;
 
 
 import com.imt.player_service.Model.Player;

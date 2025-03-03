@@ -1,7 +1,7 @@
-package com.imt.player_service.Services.PlayerServices.Impl;
+package com.imt.player_service.Services.Impl;
 import com.imt.player_service.Model.Player;
-import com.imt.player_service.Services.PlayerServices.AbstractPlayerService;
-import com.imt.player_service.Services.PlayerServices.GetPlayerService;
+import com.imt.player_service.Services.AbstractPlayerService;
+import com.imt.player_service.Services.GetPlayerService;
 import org.springframework.stereotype.Service;
 
 @Service(value = "GetUserService")

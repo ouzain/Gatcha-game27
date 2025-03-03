@@ -1,14 +1,13 @@
 package com.imt.player_service.Controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imt.player_service.Dto.PlayerDto;
 import com.imt.player_service.OpenFeing.AuthServiceClient;
 import com.imt.player_service.OpenFeing.InvokClient;
-import com.imt.player_service.Services.PlayerServices.AddPlayerService;
-import com.imt.player_service.Services.PlayerServices.DeletePlayerService;
-import com.imt.player_service.Services.PlayerServices.GetPlayerService;
-import com.imt.player_service.Services.PlayerServices.UpdatePlayerService;
+import com.imt.player_service.Services.AddPlayerService;
+import com.imt.player_service.Services.DeletePlayerService;
+import com.imt.player_service.Services.GetPlayerService;
+import com.imt.player_service.Services.UpdatePlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -157,6 +156,11 @@ public class PlayerController {
         return ResponseEntity.ok("Monstre acquis avec succès ! (ID: " + monsterId + ")");
     }
 
+    @PostMapping(value = "/level-up")
+    public void levelUp(Player player) {
+
+        this.updatePlayerService.execute(player);
+    }
 
 
 }

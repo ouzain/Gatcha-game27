@@ -1,9 +1,9 @@
-package com.imt.player_service.Services.PlayerServices.Impl;
+package com.imt.player_service.Services.Impl;
 
 
 import com.imt.player_service.Model.Player;
-import com.imt.player_service.Services.PlayerServices.AbstractPlayerService;
-import com.imt.player_service.Services.PlayerServices.UpdatePlayerService;
+import com.imt.player_service.Services.AbstractPlayerService;
+import com.imt.player_service.Services.UpdatePlayerService;
 import org.springframework.stereotype.Service;
 
 @Service(value = "UpdateUserService")
@@ -33,5 +33,24 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
         playerRepository.save(updatedPlayer);
 
     }
+
+    //TODO: Gestion du level up selon les combats gagnés soit selon le niveau il faut gagner
+    // x combat pour augmenter et il faut invoquer un monstre lors dulevel up
+    @Override
+    public void levelUp(Player player) {
+        Player foundPlayer = playerRepository.findByUsername(player.getUsername());
+
+        if (foundPlayer == null) {
+            throw new RuntimeException("User not found: " + player.getUsername());
+        }
+
+        // Mise à jour du niveau et de l'expérience
+        foundPlayer.setLevel(foundPlayer.getLevel() + 1);
+        foundPlayer.setExperience(0);  // Reset de l'XP après un level up
+
+        // Sauvegarde dans MongoDB
+        playerRepository.save(foundPlayer);
+    }
+
 
 }

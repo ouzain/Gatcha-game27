@@ -25,7 +25,7 @@ public class PlayerDto implements Serializable {
     @JsonProperty("level")
     protected int level;
     @JsonProperty("experience")
-    protected int experience;
+    protected double experience;
     @JsonProperty("monster_list")
     protected List<Integer> monsterList;
 
@@ -45,7 +45,7 @@ public class PlayerDto implements Serializable {
         return level;
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return experience;
     }
 
@@ -76,7 +76,7 @@ public class PlayerDto implements Serializable {
         private String password;
         private String token;
         private int level;
-        private int experience;
+        private double experience;
         private List<Integer> monsterList;
 
         private Builder(){}
@@ -106,7 +106,7 @@ public class PlayerDto implements Serializable {
             return this;
         }
 
-        public Builder experience(int experience) {
+        public Builder experience(double experience) {
             this.experience = experience;
             return this;
         }
