@@ -1,7 +1,5 @@
 package com.imt.player_service.Controller;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imt.player_service.Dto.PlayerDto;
 import com.imt.player_service.OpenFeing.AuthServiceClient;
 import com.imt.player_service.OpenFeing.InvokClient;
@@ -156,6 +154,8 @@ public class PlayerController {
         // Réponse finale si tout est OK
         return ResponseEntity.ok("Monstre acquis avec succès ! (ID: " + monsterId + ")");
     }
+    // Test unitaire pour faire communiquer les différente  Services: global
+
 
 
 
