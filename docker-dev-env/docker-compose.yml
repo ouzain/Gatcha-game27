@@ -11,6 +11,18 @@ services:
     image: mongo
     volumes:
       - mongo-data:/data/db
+
+  eureka-server:
+    build: ../eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
 volumes:
   mongo-data:
     driver: local
