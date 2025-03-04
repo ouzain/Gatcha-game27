@@ -1,6 +1,5 @@
 package com.imt.authentication_service.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imt.authentication_service.AuthModel.AuthEntity;
 import com.imt.authentication_service.AuthService.AuthenticationService;
 import com.imt.authentication_service.AuthService.CrudServices.AddService;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api-auth")
 public class AuthController {
     @Autowired
@@ -30,10 +30,10 @@ public class AuthController {
     private DeleteService deleteService;
 
     // l'authentification
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestParam (value = "username", required = true) String username,
-                                        @RequestParam(value="password", required = true) String password) {
-        String token = authenticationService.authenticate(username, password);
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AuthEntityDto authEntityDto) {
+        String token = authenticationService.authenticate(authEntityDto.getUsername(), authEntityDto.getPassword());
+
         if (token != null) {
             return ResponseEntity.ok(token);
         } else {
@@ -41,9 +41,15 @@ public class AuthController {
         }
     }
 
+
     // validation du token
-    @PostMapping("/validate")
-    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+    @GetMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+        }
+
+        String token = authorizationHeader.substring(7);
         String username = authenticationService.validateToken(token);
         if (username != null) {
             return ResponseEntity.ok(username);
@@ -51,6 +57,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired or invalid");
         }
     }
+
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerPlayerCredentials(@RequestBody AuthEntityDto authEntityDto) {

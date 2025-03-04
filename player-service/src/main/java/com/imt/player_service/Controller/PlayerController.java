@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.imt.player_service.Model.Player;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/player")
 public class PlayerController {
 
