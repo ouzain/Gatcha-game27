@@ -68,7 +68,7 @@ public class FightLogic {
     }
 
     /**
-     * Implémente un système de gestion d'énergie pour limiter les attaques spéciales.
+     * Vérifie si le monstre a assez d'énergie pour une attaque spéciale.
      */
     public boolean hasEnoughEnergy(MonsterDto attacker) {
         return attacker.getEnergy() >= 10; // Nécessite 10 points d'énergie
@@ -85,7 +85,7 @@ public class FightLogic {
      * Applique des états de combat : fatigue, boost temporaire, protection.
      */
     public void applyBattleStates(MonsterDto monster) {
-        if (random.nextDouble() < 0.2) { // 20% de chances d'appliquer un état
+        if (random.nextDouble() < 0.2) { // 20% de chances d'appliquer un état de fatigue
             monster.setFatigued(true);
         }
         if (random.nextDouble() < 0.15) { // 15% de chances d'obtenir un boost temporaire
@@ -96,4 +96,3 @@ public class FightLogic {
         }
     }
 }
-
