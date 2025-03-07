@@ -1,0 +1,34 @@
+<header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <a routerLink="/">Gacha Game</a>
+        </div>
+        <nav class="nav">
+          <ul class="nav-list">
+            <li *ngIf="isAuthenticated$ | async">
+              <a routerLink="/profile" routerLinkActive="active">Profile</a>
+            </li>
+            <li *ngIf="isAuthenticated$ | async">
+              <a routerLink="/monsters" routerLinkActive="active">Monstres</a>
+            </li>
+            <li *ngIf="isAuthenticated$ | async">
+              <a routerLink="/summon" routerLinkActive="active">Invocation</a>
+            </li>
+            <li *ngIf="isAuthenticated$ | async">
+              <a routerLink="/battles" routerLinkActive="active">Combats</a>
+            </li>
+            <li *ngIf="!(isAuthenticated$ | async)">
+              <a routerLink="/login" routerLinkActive="active">Se connecter</a>
+            </li>
+            <li *ngIf="!(isAuthenticated$ | async)">
+              <a routerLink="/register" routerLinkActive="active">S'inscrire</a>
+            </li>
+            <li *ngIf="isAuthenticated$ | async">
+              <a href="#" (click)="logout($event)">Deconnexion</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>

@@ -1,0 +1,90 @@
+<div class="battles-container">
+    <div class="card battle-form-card">
+      <h2 class="text-center">Start a Battle</h2>
+      
+      <div *ngIf="isLoadingMonsters" class="text-center">
+        <p>Loading your monsters...</p>
+      </div>
+      
+      <div *ngIf="!isLoadingMonsters && monsters.length < 2" class="text-center">
+        <p>You need at least 2 monsters to start a battle.</p>
+        <a routerLink="/summon" class="btn mt-3">Summon More Monsters</a>
+      </div>
+      
+      <form *ngIf="!isLoadingMonsters && monsters.length >= 2" [formGroup]="battleForm" (ngSubmit)="startBattle()">
+        <div class="form-group">
+          <label for="monster1">First Monster</label>
+          <select id="monster1" formControlName="monster1Id" class="form-control">
+            <option value="">Select a monster</option>
+            <option *ngFor="let monster of monsters" [value]="monster.id">
+              {{ monster.name }} (Lv. {{ monster.level }}, {{ monster.elementType | titlecase }})
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="monster2">Second Monster</label>
+          <select id="monster2" formControlName="monster2Id" class="form-control">
+            <option value="">Select a monster</option>
+            <option *ngFor="let monster of monsters" [value]="monster.id">
+              {{ monster.name }} (Lv. {{ monster.level }}, {{ monster.elementType | titlecase }})
+            </option>
+          </select>
+          <div *ngIf="battleForm.errors?.['sameMonster']" class="error-message">
+            You cannot select the same monster twice
+          </div>
+        </div>
+        
+        <button type="submit" class="btn w-100" [disabled]="battleForm.invalid || isStartingBattle">
+          {{ isStartingBattle ? 'Starting Battle...' : 'Start Battle' }}
+        </button>
+      </form>
+    </div>
+    
+    <div class="card battle-history-card">
+      <h2 class="text-center">Battle History</h2>
+      
+      <div *ngIf="isLoadingBattles" class="text-center">
+        <p>Loading battle history...</p>
+      </div>
+      
+      <div *ngIf="!isLoadingBattles && battles.length === 0" class="text-center">
+        <p>No battles found. Start your first battle!</p>
+      </div>
+      
+      <div *ngIf="!isLoadingBattles && battles.length > 0" class="battle-list">
+        <div *ngFor="let battle of battles" class="battle-item">
+          <div class="battle-info">
+            <div class="battle-monsters">
+              <div class="battle-monster" *ngIf="battle.monster1" [ngClass]="battle.monster1.elementType">
+                {{ battle.monster1.name }}
+              </div>
+              <span class="vs">VS</span>
+              <div class="battle-monster" *ngIf="battle.monster2" [ngClass]="battle.monster2.elementType">
+                {{ battle.monster2.name }}
+              </div>
+            </div>
+            
+            <div class="battle-result">
+              <span class="winner-label">Winner:</span>
+              <span class="winner-name" *ngIf="battle.winner" [ngClass]="battle.winner.elementType">
+                {{ battle.winner.name }}
+              </span>
+            </div>
+            
+            <div class="battle-date">
+              {{ battle.date | date:'medium' }}
+            </div>
+          </div>
+          
+          <div class="battle-actions">
+            <a [routerLink]="['/battles', battle.id]" class="btn btn-small">View Replay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message text-center mt-3">
+      {{ errorMessage }}
+    </div>
+  </div>

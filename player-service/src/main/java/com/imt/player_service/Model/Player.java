@@ -11,6 +11,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,7 +45,7 @@ public class Player {
         this.token = token;
         this.level = level;
         this.experience = experience;
-        this.monsterList = monsterList;
+        this.monsterList = monsterList != null ? monsterList : new ArrayList<>();
     }
 
 

@@ -1,0 +1,89 @@
+<div class="invocation-container">
+    <div class="card invocation-card">
+      <h2 class="text-center">Invocation de monstre</h2>
+      
+      <div *ngIf="isLoadingProfile" class="text-center">
+        <p>Chargement du profil...</p>
+      </div>
+      
+      <div *ngIf="!isLoadingProfile && user">
+        <div class="invocation-info">
+          <p>Vous avez {{ user.monsterIds.length }} / {{ user.maxMonsters }} monstres.</p>
+          
+          <div *ngIf="user.monsterIds.length >= user.maxMonsters" class="error-message text-center">
+            <p>Votre stockage de monstres est plein ! Libérez des monstres ou améliorez votre niveau pour augmenter votre capacité.</p>
+          </div>
+        </div>
+        
+        <div class="invocation-action">
+          <button 
+            class="btn invocation-btn" 
+            (click)="summonMonster()" 
+            [disabled]="isSummoning || user.monsterIds.length >= user.maxMonsters"
+          >
+            {{ isSummoning ? 'Invocation en cours...' : 'Invoquer un monstre' }}
+          </button>
+        </div>
+      </div>
+      
+      <div *ngIf="summonedMonster" class="summoned-monster">
+        <h3 class="text-center">Vous avez invoqué :</h3>
+        
+        <div class="card monster-card">
+          <div class="monster-header" [ngClass]="summonedMonster.elementType">
+            <h3>{{ summonedMonster.name }}</h3>
+            <span class="element-badge">{{ summonedMonster.elementType | titlecase }}</span>
+          </div>
+          
+          <div class="monster-stats">
+            <div class="stat">
+              <span class="stat-label">HP :</span>
+              <span class="stat-value">{{ summonedMonster.hp }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">ATK :</span>
+              <span class="stat-value">{{ summonedMonster.atk }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">DEF :</span>
+              <span class="stat-value">{{ summonedMonster.def }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">VIT :</span>
+              <span class="stat-value">{{ summonedMonster.vit }}</span>
+            </div>
+          </div>
+          
+          <div class="monster-actions">
+            <a [routerLink]="['/monsters', summonedMonster.id]" class="btn">Voir les détails</a>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message text-center mt-3">
+        {{ errorMessage }}
+      </div>
+    </div>
+    
+    <div class="card summon-history-card">
+      <h3 class="text-center">Invocations récentes</h3>
+      
+      <div *ngIf="isLoadingHistory" class="text-center">
+        <p>Chargement de l'historique des invocations...</p>
+      </div>
+      
+      <div *ngIf="!isLoadingHistory && summonHistory.length === 0" class="text-center">
+        <p>Aucune invocation récente.</p>
+      </div>
+      
+      <div *ngIf="!isLoadingHistory && summonHistory.length > 0" class="summon-history">
+        <div *ngFor="let monster of summonHistory" class="history-item">
+          <div class="history-monster" [ngClass]="monster.elementType">
+            <span class="monster-name">{{ monster.name }}</span>
+            <span class="element-badge small">{{ monster.elementType | titlecase }}</span>
+          </div>
+          <a [routerLink]="['/monsters', monster.id]" class="btn btn-small">Voir</a>
+        </div>
+      </div>
+    </div>
+  </div>

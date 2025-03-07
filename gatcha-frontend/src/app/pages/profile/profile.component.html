@@ -1,0 +1,79 @@
+<div class="profile-container">
+  <div class="card profile-card">
+    <h2 class="text-center">Profil du joueur</h2>
+    
+    <div *ngIf="isLoading" class="text-center">
+      <p>Chargement du profil...</p>
+    </div>
+    
+    <div *ngIf="!isLoading && user">
+      <div class="profile-info">
+        <div class="info-item">
+          <span class="label">Nom d'utilisateur :</span>
+          <span class="value">{{ user.username }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="label">Niveau :</span>
+          <span class="value">{{ user.level }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="label">Expérience :</span>
+          <span class="value">{{ user.experience }} / {{ user.maxExperience }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="label">Monstres :</span>
+          <span class="value">{{ user.monsterIds.length || 0 }} / {{ user.maxMonsters }}</span>
+
+        </div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-label">Progression du niveau</div>
+        <div class="progress-bar">
+          <div 
+            class="progress-fill" 
+            [style.width.%]="(user.experience / user.maxExperience) * 100"
+          ></div>
+        </div>
+      </div>
+      
+      <div class="actions">
+        <button 
+          class="btn" 
+          (click)="gainExperience()" 
+          [disabled]="isGainingExp"
+        >
+          {{ isGainingExp ? 'En train d\'acquérir de l\'expérience...' : 'Gagner de l\'expérience' }}
+        </button>
+        
+        <button 
+          class="btn btn-secondary" 
+          (click)="levelUp()" 
+          [disabled]="isLevelingUp || user.experience < user.maxExperience"
+        >
+          {{ isLevelingUp ? 'En train de monter en niveau...' : 'Monter de niveau' }}
+        </button>
+      </div>
+      
+      <div class="monster-section">
+        <h3>Vos monstres</h3>
+        
+        <div *ngIf="user.monsterIds.length === 0" class="text-center">
+          <p>Vous n'avez encore aucun monstre.</p>
+          <a routerLink="/summon" class="btn mt-3">Invoquer votre premier monstre</a>
+        </div>
+        
+        <div *ngIf="user.monsterIds.length > 0" class="text-center">
+          <a routerLink="/monsters" class="btn">Voir tous les monstres</a>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message text-center mt-3">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

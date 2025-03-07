@@ -1,0 +1,28 @@
+<div class="home">
+    <div class="hero">
+      <h1>Bienvenue dans Gacha Game </h1>
+      <p>Collectionnez des monstres, combattez des adversaires et devenez le maître ultime !</p>
+      <div class="cta-buttons">
+        <a *ngIf="!(isAuthenticated$ | async)" routerLink="/register" class="btn">Commencer</a>
+        <a *ngIf="isAuthenticated$ | async" routerLink="/summon" class="btn">Invoquer des monstres</a>
+        <a *ngIf="isAuthenticated$ | async" routerLink="/battles" class="btn btn-secondary">Commencer le combat</a>
+      </div>
+    </div>
+    
+    <div class="features">
+      <div class="card feature">
+        <h2>Invoquer des monstres</h2>
+        <p>Invoquez et collectionnez des monstres uniques avec différents types élémentaires et        capacités.</p>
+      </div>
+      
+      <div class="card feature">
+        <h2>Monter en niveau </h2>
+        <p>Entraînez vos monstres, améliorez leurs statistiques et améliorez leurs compétences pour les rendre plus forts.</p>
+      </div>
+      
+      <div class="card feature">
+        <h2>Combat</h2>
+        <p>Affrontez d'autres monstres dans des batailles passionnantes et regardez l'action se dérouler.</p>
+      </div>
+    </div>
+  </div>

@@ -40,7 +40,7 @@ export class AuthService {
   
 
   register(username: string, password: string): Observable<boolean> {
-    return this.http.post<AuthResponse>(`${environment.authApiUrl}/add`, { username, password })
+    return this.http.post<AuthResponse>(`${environment.playerApiUrl}/add`, { username, password })
       .pipe(
         tap(response => {
           this.setToken(response.token);

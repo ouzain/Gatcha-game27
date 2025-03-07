@@ -1,6 +1,7 @@
 package com.imt.authentication_service.controller;
 
 import com.imt.authentication_service.AuthModel.AuthEntity;
+import com.imt.authentication_service.AuthModel.ApiResponse;
 import com.imt.authentication_service.AuthService.AuthenticationService;
 import com.imt.authentication_service.AuthService.CrudServices.AddService;
 import com.imt.authentication_service.AuthService.CrudServices.DeleteService;
@@ -12,14 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api-auth")
 public class AuthController {
     @Autowired
-    private  AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
     @Autowired
     private AddService addService;
     @Autowired
@@ -31,163 +31,122 @@ public class AuthController {
 
     // l'authentification
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthEntityDto authEntityDto) {
+    public ResponseEntity<ApiResponse> login(@RequestBody AuthEntityDto authEntityDto) {
         String token = authenticationService.authenticate(authEntityDto.getUsername(), authEntityDto.getPassword());
 
         if (token != null) {
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(new ApiResponse("Authentication successful", true, token));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse("Invalid username or password", false));
         }
     }
 
-
     // validation du token
     @GetMapping("/validate")
-    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<ApiResponse> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse("Missing or invalid token", false));
         }
 
         String token = authorizationHeader.substring(7);
         String username = authenticationService.validateToken(token);
         if (username != null) {
-            return ResponseEntity.ok(username);
+            return ResponseEntity.ok(new ApiResponse("Token is valid", true, username));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired or invalid");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse("Token expired or invalid", false));
         }
     }
-
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> registerPlayerCredentials(@RequestBody AuthEntityDto authEntityDto) {
+    public ResponseEntity<ApiResponse> registerPlayerCredentials(@RequestBody AuthEntityDto authEntityDto) {
+        if (authEntityDto == null || authEntityDto.getUsername() == null || authEntityDto.getPassword() == null ||
+                authEntityDto.getUsername().isBlank() || authEntityDto.getPassword().isBlank()) {
 
-        // 1) Vérifier que le DTO n'est pas null et possède des champs valides
-        if (authEntityDto == null
-                || authEntityDto.getUsername() == null
-                || authEntityDto.getPassword() == null
-                || authEntityDto.getUsername().isBlank()
-                || authEntityDto.getPassword().isBlank()) {
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("AuthEntityDto invalide (username/password manquants ou vides).");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("AuthEntityDto invalid (missing or empty username/password).", false));
         }
 
-        // 2) Vérifier les contraintes de mot de passe (longueur min)
         if (authEntityDto.getPassword().length() < 4) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Le mot de passe doit comporter au moins 4 caractères.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Password must be at least 4 characters long.", false));
         }
 
-        // 3) Vérifier si l'utilisateur existe déjà en base
-        //    (ex : via un service "getByUsername(authEntityDto.getUsername())")
         AuthEntity existingUser = this.getService.byUserName(authEntityDto.getUsername());
         if (existingUser != null) {
-            // L’utilisateur existe déjà donc Conflit
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Un utilisateur avec ce nom existe déjà.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ApiResponse("A user with this name already exists.", false));
         }
 
-        // 4) Convertir le DTO en entité
         AuthEntity player = authEntityDto.toAuthEntity();
-
-        // 5) Appeler la couche service pour l'enregistrer
         this.addService.execute(player);
 
-        // 6) Retourner un code 201 Created en cas de succès
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Player credentials registered.");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse("Player credentials registered.", true));
     }
 
-
     @GetMapping(value = "/get-user", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getPlayerCredentials(
+    public ResponseEntity<ApiResponse> getPlayerCredentials(
             @RequestParam(value = "username", required = false) String username,
-            @RequestParam(value = "token", required = false) String token
-    ) {
+            @RequestParam(value = "token", required = false) String token) {
 
-        // 1) Valider l'input : s'assurer qu'on a au moins un des deux paramètres
         if ((username == null || username.isBlank()) && (token == null || token.isBlank())) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Veuillez fournir soit un username, soit un token (ou les deux).");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Please provide either a username or a token (or both).", false));
         }
 
         AuthEntity foundPlayer = null;
-
-        // 2) Récupérer le user soit par username, soit par token (ou les deux)
         if (username != null && !username.isBlank()) {
             foundPlayer = this.getService.byUserName(username);
         } else if (token != null && !token.isBlank()) {
             foundPlayer = this.getService.byToken(token);
         }
 
-        // 3) Gérer le cas où l’utilisateur n’existe pas
         if (foundPlayer == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Aucun utilisateur correspondant n’a été trouvé.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("No user found matching the provided credentials.", false));
         }
 
-        // 4) Conversion en DTO et retour
         AuthEntityDto dto = foundPlayer.toAuthEntityDto();
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(new ApiResponse("User found", true, dto));
     }
 
+    @PatchMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ApiResponse> updatePlayer(@RequestBody AuthEntityDto playerDto) {
+        if (playerDto == null || playerDto.getUsername() == null || playerDto.getPassword() == null ||
+                playerDto.getUsername().isBlank() || playerDto.getPassword().isBlank()) {
 
-    @PatchMapping(value = "/update",consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> updatePlayer(@RequestBody AuthEntityDto playerDto){
-
-        if (playerDto == null
-                || playerDto.getUsername() == null
-                || playerDto.getPassword() == null
-                || playerDto.getUsername().isBlank()
-                || playerDto.getPassword().isBlank()) {
-
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("AuthEntityDto invalide (username/password manquants ou vides).");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("AuthEntityDto invalid (missing or empty username/password).", false));
         }
+
         AuthEntity updatedPlayer = playerDto.toAuthEntity();
         try {
             this.updateService.execute(updatedPlayer);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur lors de la mise à jour du joueur.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("Error occurred while updating the player.", false));
         }
-        return null;
-    }
 
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse("Player updated successfully.", true));
+    }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> deletePlayer(@RequestParam(value = "username", required = true) String username) {
-
-        // 1) Vérifier que le paramètre "username" n'est pas null ou vide
+    public ResponseEntity<ApiResponse> deletePlayer(@RequestParam(value = "username", required = true) String username) {
         if (username == null || username.isBlank()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Le paramètre 'username' est obligatoire et ne doit pas être vide.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("The 'username' parameter is required and cannot be empty.", false));
         }
 
-        // 2) Vérifier si l'utilisateur existe avant de le supprimer
         AuthEntity existingUser = this.getService.byUserName(username);
         if (existingUser == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Aucun utilisateur trouvé pour le username : " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("No user found for the username: " + username, false));
         }
 
-        // 3) Supprimer l’utilisateur
         this.deleteService.execute(username);
-
-        // 4) Retourner un statut 204 NO_CONTENT en cas de succès
         return ResponseEntity.noContent().build();
     }
-
 }
-
-

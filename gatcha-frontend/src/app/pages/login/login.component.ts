@@ -8,76 +8,8 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  template: `
-    <div class="login-container">
-      <div class="card login-card">
-        <h2 class="text-center">Login</h2>
-        
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input 
-              type="text" 
-              id="username" 
-              formControlName="username" 
-              class="form-control"
-              [class.is-invalid]="username?.invalid && (username?.dirty || username?.touched)"
-            >
-            <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="error-message">
-              <div *ngIf="username?.errors?.['required']">Username is required</div>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              formControlName="password" 
-              class="form-control"
-              [class.is-invalid]="password?.invalid && (password?.dirty || password?.touched)"
-            >
-            <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
-              <div *ngIf="password?.errors?.['required']">Password is required</div>
-            </div>
-          </div>
-          
-          <div *ngIf="errorMessage" class="error-message mb-3">
-            {{ errorMessage }}
-          </div>
-          
-          <button type="submit" class="btn w-100" [disabled]="loginForm.invalid || isLoading">
-            {{ isLoading ? 'Logging in...' : 'Login' }}
-          </button>
-        </form>
-        
-        <p class="text-center mt-3">
-          Don't have an account? <a routerLink="/register">Register</a>
-        </p>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 80vh;
-    }
-    
-    .login-card {
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .w-100 {
-      width: 100%;
-    }
-    
-    .is-invalid {
-      border-color: var(--error-color);
-    }
-  `]
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;

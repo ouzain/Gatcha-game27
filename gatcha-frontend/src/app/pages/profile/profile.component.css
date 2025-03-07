@@ -1,0 +1,64 @@
+.profile-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  
+  .profile-card {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .profile-info {
+    margin: 20px 0;
+  }
+  
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+  }
+  
+  .label {
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+  
+  .progress-container {
+    margin: 20px 0;
+  }
+  
+  .progress-label {
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .progress-bar {
+    height: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  .monster-section {
+    margin-top: 30px;
+  }
+  
+  .monster-section h3 {
+    margin-bottom: 15px;
+    text-align: center;
+  }

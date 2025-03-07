@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user.model';
+import { map } from 'rxjs/operators';
+
+interface ApiResponse {
+  success: boolean;
+  data: any;
+  message?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +18,17 @@ export class PlayerService {
   constructor(private http: HttpClient) {}
 
   getProfile(username: string): Observable<User> {
-    return this.http.get<User>(`${environment.playerApiUrl}/get-user`, {
+    return this.http.get<ApiResponse>(`${environment.playerApiUrl}/get-user`, {
       params: { username }
-    });
+    }).pipe(
+      map(response => {
+        if (response.success) {
+          return response.data as User;  // Ici nous supposons que 'data' contient les informations du joueur
+        } else {
+          throw new Error(response.message || 'Failed to load player');
+        }
+      })
+    );
   }
 
   getMonsterList(): Observable<string[]> {

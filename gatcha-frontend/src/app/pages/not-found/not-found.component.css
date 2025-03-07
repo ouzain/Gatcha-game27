@@ -1,0 +1,22 @@
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    text-align: center;
+  }
+  
+  .not-found-content h1 {
+    font-size: 6rem;
+    color: var(--primary-color);
+    margin-bottom: 0;
+  }
+  
+  .not-found-content h2 {
+    margin-bottom: 20px;
+  }
+  
+  .not-found-content p {
+    margin-bottom: 30px;
+    max-width: 500px;
+  }

@@ -4,6 +4,7 @@ export interface User {
   level: number;
   experience: number;
   maxExperience: number;
-  monsterIds: string[];
+  monsterIds: number[];
   maxMonsters: number;
 }
+  

@@ -17,8 +17,15 @@ services:
     container_name: eureka-server
     ports:
       - "8761:8761"
-    networks:
-      - microservices-net
+
+  gatcha-frontend:
+    build: .
+    container_name: gatcha-frontend
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
 
 networks:
   microservices-net:

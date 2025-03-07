@@ -1,0 +1,19 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
+  
+  .register-card {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .w-100 {
+    width: 100%;
+  }
+  
+  .is-invalid {
+    border-color: var(--error-color);
+  }

@@ -13,9 +13,8 @@ public interface AuthServiceClient {
     @GetMapping("/api-auth/validate")
     ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token);
 
-    @GetMapping("/api-auth/login")
-    ResponseEntity<String> login(@RequestParam(value = "username", required = true) String username,
-                                 @RequestParam(value = "password", required = true) String password);
+    @PostMapping("/api-auth/login")
+    ResponseEntity<String> login(@RequestBody AuthRequest authRequest);
 
 
     @PostMapping(value = "/api-auth/add", consumes = MediaType.APPLICATION_JSON_VALUE)
