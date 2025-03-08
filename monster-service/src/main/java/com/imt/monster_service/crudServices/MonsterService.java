@@ -13,8 +13,8 @@ public class MonsterService {
     @Autowired
     private MonsterRepository monsterRepository;
 
-    public List<Monster> getAllMonsters() {
-        return monsterRepository.findAll();
+    public List<Monster> getAllMonsters(String token) {
+        return monsterRepository.findAllByTokenUser(token);
     }
 
     public Optional<Monster> getMonsterById(int id) {

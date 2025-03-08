@@ -26,4 +26,21 @@ public class UpdateMonsterServiceImpl implements UpdateMonsterService{
 
        monsterRepository.save(updatedMonster);
     }
+
+
+    @Override
+    public void addExp(Integer id, int exp) {
+        Optional<Monster> monsterOptional    = monsterRepository.findById(id);
+        if (monsterOptional.isPresent()) {
+            Monster monster = monsterOptional.get();
+            monster.setHp(monster.getHp() + exp);
+            monster.setAtk(monster.getAtk() + exp);
+            monster.setVit(monster.getVit() + exp);
+            monster.setDef(monster.getDef() + exp);
+            monster.setLootRate(monster.getLootRate() + exp);
+        }
+
+    }
+
+
 }

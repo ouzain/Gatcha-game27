@@ -12,7 +12,8 @@ public class Monster {
     @Id
     private Integer id;
     // id pour faciliter la mani
-    private String
+    private String tokenUser;
+    private String name;
     private String element;
     private int hp;
     private int atk;
@@ -22,6 +23,7 @@ public class Monster {
     private List<Skill> skills;
 
     public Monster() {}
+
 
     public Integer getId() {
         return id;

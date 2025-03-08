@@ -7,6 +7,7 @@ import com.imt.monster_service.crudServices.UpdateMonsterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class MonsterController {
     private UpdateMonsterService updateMonsterService;
 
     @GetMapping("/all")
-    public List<Monster> getAllMonsters() {
-        return monsterService.getAllMonsters();
+    public List<Monster> getAllMonsters(String token) {
+        return monsterService.getAllMonsters(token);
     }
 
     @GetMapping("/{id}")
@@ -46,7 +47,7 @@ public class MonsterController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMonster(@PathVariable int id) {
+    public ResponseEntity<Void> deleteMonster(@PathVariable int id, @RequestParam String token ) {
         monsterService.deleteMonster(id);
         return ResponseEntity.noContent().build();
     }
@@ -56,5 +57,11 @@ public class MonsterController {
         Monster monster = monsterDto.toMonsterEntity();
         updateMonsterService.execute(monster);
         
+    }
+
+    @PostMapping("addExp-Monster")
+    public ResponseEntity<?> addExpMonster(@RequestParam Integer id, @RequestParam int exp) {
+        updateMonsterService.addExp(id, exp);
+        return ResponseEntity.ok("L'expérience du monstre a été augmentée");
     }
 }
