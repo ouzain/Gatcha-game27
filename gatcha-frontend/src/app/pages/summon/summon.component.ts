@@ -74,7 +74,7 @@ export class SummonComponent implements OnInit {
   }
   
   summonMonster(): void {
-    if (!this.user || this.user.monsterIds.length >= this.user.maxMonsters) return;
+    if (!this.user || this.user.monsterList.length >= this.user.maxMonsters) return;
     
     this.isSummoning = true;
     this.summonedMonster = null;

@@ -1,10 +1,11 @@
 export interface User {
-  id?: string;
   username: string;
+  token: string;
   level: number;
   experience: number;
   maxExperience: number;
-  monsterIds: number[];
   maxMonsters: number;
+  monsterList:number[];
+  
 }
   

@@ -24,11 +24,13 @@ public class Player {
     @Id
     private ObjectId id;
     @NotBlank
-    private final String username;
+    private  String username;
     private String token;
-    private final int level;
-    private final int experience;
-    private List<Integer> monsterList;
+    private  int level;
+    private  int experience;
+    private int maxExperience;
+    private int maxMonsters;
+    private  List<Integer> monsterList;
 
 
     /**
@@ -40,13 +42,23 @@ public class Player {
                   String token,
                   int level,
                   int experience,
+                  int maxExperience,
+                  int maxMonsters,
                   List<Integer> monsterList) {
         this.username = username;
         this.token = token;
         this.level = level;
         this.experience = experience;
+        this.maxExperience = maxExperience;
+        this.maxMonsters = maxMonsters;
         this.monsterList = monsterList != null ? monsterList : new ArrayList<>();
     }
+
+    public Player() {
+
+    }
+
+
 
 
 
@@ -72,6 +84,14 @@ public class Player {
 
     public List<Integer> getMonsterList(){return monsterList;}
 
+    public int getMaxExperience() {
+        return maxExperience;
+    }
+
+    public int getMaxMonsters() {
+        return maxMonsters;
+    }
+
     public void addMonster(Integer monsterId){
         this.monsterList.add(monsterId);
     }
@@ -84,6 +104,8 @@ public class Player {
         this.level = builder.level;
         this.experience = builder.experience;
         this.monsterList=builder.monsterList;
+        this.maxExperience = builder.maxExperience;
+        this.maxMonsters = builder.maxMonsters;
     }
 
 
@@ -95,6 +117,8 @@ public class Player {
         private int level;
         private int experience;
         private List<Integer> monsterList;
+        private int maxExperience;
+        private int maxMonsters;
 
         private Builder(){}
         public static Builder builder() {
@@ -133,6 +157,16 @@ public class Player {
             return  this;
         }
 
+        public Builder maxExperience(int maxExperience) {
+            this.maxExperience = maxExperience;
+            return this;
+        }
+
+        public Builder maxMonsters(int maxMonsters) {
+            this.maxMonsters = maxMonsters;
+            return this;
+        }
+
 
         public Player build() {
             return new Player(this);
@@ -146,6 +180,8 @@ public class Player {
                 .token(this.token)
                 .level(this.level)
                 .experience(this.experience)
+                .maxExperience(this.maxExperience)
+                .maxMonsters(this.maxMonsters)
                 .monsterList(this.monsterList)
                 .build();
     }

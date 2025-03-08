@@ -20,12 +20,12 @@
         
         <div class="info-item">
           <span class="label">Expérience :</span>
-          <span class="value">{{ user.experience }} / {{ user.maxExperience }}</span>
+          <span class="value">{{ user.experience }} </span>
         </div>
         
         <div class="info-item">
           <span class="label">Monstres :</span>
-          <span class="value">{{ user.monsterIds.length || 0 }} / {{ user.maxMonsters }}</span>
+          <span class="value">{{ user.monsterList.length || 0 }} </span>
 
         </div>
       </div>
@@ -61,12 +61,12 @@
       <div class="monster-section">
         <h3>Vos monstres</h3>
         
-        <div *ngIf="user.monsterIds.length === 0" class="text-center">
+        <div *ngIf="user.monsterList.length === 0" class="text-center">
           <p>Vous n'avez encore aucun monstre.</p>
           <a routerLink="/summon" class="btn mt-3">Invoquer votre premier monstre</a>
         </div>
         
-        <div *ngIf="user.monsterIds.length > 0" class="text-center">
+        <div *ngIf="user.monsterList.length > 0" class="text-center">
           <a routerLink="/monsters" class="btn">Voir tous les monstres</a>
         </div>
       </div>

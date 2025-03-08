@@ -28,6 +28,12 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
                 .monsterList(player.getMonsterList() != null && !player.getMonsterList().isEmpty()
                         ? player.getMonsterList()
                         : foundPlayer.getMonsterList())
+                .maxExperience(player.getMaxExperience() != 0
+                        ? player.getMaxExperience()
+                        : foundPlayer.getMaxExperience())
+                .maxMonsters(player.getMaxMonsters() != 0
+                        ? player.getMaxMonsters()
+                        : foundPlayer.getMaxMonsters())
                 .build();
 
         playerRepository.save(updatedPlayer);

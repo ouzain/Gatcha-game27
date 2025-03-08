@@ -38,9 +38,10 @@ export class ProfileComponent implements OnInit {
     this.playerService.getProfile(username).subscribe({
       next: (user) => {
         this.user = user;
-        // vérifier que monsterIds est défini
-        if (!this.user.monsterIds) {
-          this.user.monsterIds = []; // Initialisez la liste à vide si elle est undefined
+        console.log('Player récupéré:', this.user);
+        // vérifier que monsterList est défini
+        if (!this.user.monsterList) {
+          this.user.monsterList = []; // Initialisez la liste à vide si elle est undefined
         }
         this.isLoading = false;
       },

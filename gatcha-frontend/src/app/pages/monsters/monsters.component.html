@@ -1,52 +1,52 @@
 <div class="monsters-container">
-    <h2 class="text-center">Vos Monstres</h2>
-    
-    <div *ngIf="isLoading" class="text-center">
-      <p>Loading monsters...</p>
-    </div>
-    
-    <div *ngIf="!isLoading && monsters.length === 0" class="text-center">
-      <p>You don't have any monsters yet.</p>
-      <a routerLink="/summon" class="btn mt-3">Invok Your First Monster</a>
-    </div>
-    
-    <div *ngIf="!isLoading && monsters.length > 0" class="monster-grid">
-      <div *ngFor="let monster of monsters" class="card monster-card">
-        <div class="monster-header" [ngClass]="monster.elementType">
-          <h3>{{ monster.name }}</h3>
-          <span class="element-badge">{{ monster.elementType | titlecase }}</span>
+  <h2 class="text-center">Vos Monstres</h2>
+  
+  <div *ngIf="isLoading" class="text-center">
+    <p>Chargement des monstres...</p>
+  </div>
+  
+  <div *ngIf="!isLoading && monsters.length === 0" class="text-center">
+    <p>Vous n'avez encore aucun monstre.</p>
+    <a routerLink="/summon" class="btn mt-3">Invoquez votre premier monstre</a>
+  </div>
+  
+  <div *ngIf="!isLoading && monsters.length > 0" class="monster-grid">
+    <div *ngFor="let monster of monsters" class="card monster-card">
+      <div class="monster-header" [ngClass]="monster.elementType">
+        <h3>{{ monster.name }}</h3>
+        <span class="element-badge">{{ monster.elementType | titlecase }}</span>
+      </div>
+      
+      <div class="monster-stats">
+        <div class="stat">
+          <span class="stat-label">Niveau :</span>
+          <span class="stat-value">{{ monster.level }}</span>
         </div>
-        
-        <div class="monster-stats">
-          <div class="stat">
-            <span class="stat-label">Level:</span>
-            <span class="stat-value">{{ monster.level }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">HP:</span>
-            <span class="stat-value">{{ monster.hp }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">ATK:</span>
-            <span class="stat-value">{{ monster.atk }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">DEF:</span>
-            <span class="stat-value">{{ monster.def }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">VIT:</span>
-            <span class="stat-value">{{ monster.vit }}</span>
-          </div>
+        <div class="stat">
+          <span class="stat-label">PV :</span>
+          <span class="stat-value">{{ monster.hp }}</span>
         </div>
-        
-        <div class="monster-actions">
-          <a [routerLink]="['/monsters', monster.id]" class="btn">View Details</a>
+        <div class="stat">
+          <span class="stat-label">ATK :</span>
+          <span class="stat-value">{{ monster.atk }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">DEF :</span>
+          <span class="stat-value">{{ monster.def }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">VIT :</span>
+          <span class="stat-value">{{ monster.vit }}</span>
         </div>
       </div>
-    </div>
-    
-    <div *ngIf="errorMessage" class="error-message text-center mt-3">
-      {{ errorMessage }}
+      
+      <div class="monster-actions">
+        <a [routerLink]="['/monsters', monster.id]" class="btn">Voir les détails</a>
+      </div>
     </div>
   </div>
+  
+  <div *ngIf="errorMessage" class="error-message text-center mt-3">
+    {{ errorMessage }}
+  </div>
+</div>

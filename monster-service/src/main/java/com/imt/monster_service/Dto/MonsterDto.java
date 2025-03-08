@@ -13,11 +13,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MonsterDto implements Serializable {
 
+    public enum ElementType {
+        FIRE, WATER, WIND
+    }
+
     @JsonProperty("id")
     protected Integer id;
 
     @JsonProperty("element")
-    protected String element;
+    protected Monster.ElementType element;
 
     @JsonProperty("hp")
     protected int hp;
@@ -59,7 +63,7 @@ public class MonsterDto implements Serializable {
         return id;
     }
 
-    public String getElement() {
+    public Monster.ElementType getElement() {
         return element;
     }
 
@@ -113,7 +117,7 @@ public class MonsterDto implements Serializable {
 
     public static final class Builder {
         private Integer id;
-        private String element;
+        private Monster.ElementType element;
         private int hp;
         private int atk;
         private int def;
@@ -132,7 +136,7 @@ public class MonsterDto implements Serializable {
             return this;
         }
 
-        public Builder element(String element) {
+        public Builder element(Monster.ElementType element) {
             this.element = element;
             return this;
         }

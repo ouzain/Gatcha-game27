@@ -1,128 +1,128 @@
 <div class="monster-detail-container">
-    <div *ngIf="isLoading" class="text-center">
-      <p>Loading monster details...</p>
-    </div>
-    
-    <div *ngIf="!isLoading && monster" class="monster-detail">
-      <div class="card monster-info">
-        <div class="monster-header" [ngClass]="monster.elementType">
-          <h2>{{ monster.name }}</h2>
-          <span class="element-badge">{{ monster.elementType | titlecase }}</span>
+  <div *ngIf="isLoading" class="text-center">
+    <p>Chargement des détails du monstre...</p>
+  </div>
+  
+  <div *ngIf="!isLoading && monster" class="monster-detail">
+    <div class="card monster-info">
+      <div class="monster-header" [ngClass]="monster.elementType">
+        <h2>{{ monster.name }}</h2>
+        <span class="element-badge">{{ monster.elementType | titlecase }}</span>
+      </div>
+      
+      <div class="monster-level-info">
+        <div class="level-display">
+          <span class="level-label">Niveau {{ monster.level }}</span>
         </div>
         
-        <div class="monster-level-info">
-          <div class="level-display">
-            <span class="level-label">Level {{ monster.level }}</span>
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              [style.width.%]="(monster.experience / monster.maxExperience) * 100"
+            ></div>
           </div>
-          
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div 
-                class="progress-fill" 
-                [style.width.%]="(monster.experience / monster.maxExperience) * 100"
-              ></div>
-            </div>
-            <div class="progress-text">
-              {{ monster.experience }} / {{ monster.maxExperience }} XP
-            </div>
+          <div class="progress-text">
+            {{ monster.experience }} / {{ monster.maxExperience }} XP
           </div>
-        </div>
-        
-        <div class="monster-stats">
-          <div class="stat-group">
-            <div class="stat">
-              <span class="stat-label">HP</span>
-              <span class="stat-value">{{ monster.hp }}</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">ATK</span>
-              <span class="stat-value">{{ monster.atk }}</span>
-            </div>
-          </div>
-          
-          <div class="stat-group">
-            <div class="stat">
-              <span class="stat-label">DEF</span>
-              <span class="stat-value">{{ monster.def }}</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">VIT</span>
-              <span class="stat-value">{{ monster.vit }}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="monster-actions">
-          <button 
-            class="btn" 
-            (click)="gainExperience()" 
-            [disabled]="isGainingExp"
-          >
-            {{ isGainingExp ? 'Training...' : 'Train (+XP)' }}
-          </button>
-          
-          <button 
-            class="btn btn-secondary" 
-            (click)="levelUp()" 
-            [disabled]="isLevelingUp || monster.experience < monster.maxExperience"
-          >
-            {{ isLevelingUp ? 'Leveling Up...' : 'Level Up' }}
-          </button>
-          
-          <button 
-            class="btn btn-danger" 
-            (click)="releaseMonster()" 
-            [disabled]="isReleasing"
-          >
-            {{ isReleasing ? 'Releasing...' : 'Release Monster' }}
-          </button>
         </div>
       </div>
       
-      <div class="card skills-card">
-        <h3>Skills</h3>
+      <div class="monster-stats">
+        <div class="stat-group">
+          <div class="stat">
+            <span class="stat-label">PV</span>
+            <span class="stat-value">{{ monster.hp }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">ATK</span>
+            <span class="stat-value">{{ monster.atk }}</span>
+          </div>
+        </div>
         
-        <div class="skills-list">
-          <div *ngFor="let skill of monster.skills" class="skill-item">
-            <div class="skill-header">
-              <h4>{{ skill.name }}</h4>
-              <span class="skill-level">Lv. {{ skill.level }}/{{ skill.maxLevel }}</span>
-            </div>
-            
-            <div class="skill-details">
-              <div class="skill-stat">
-                <span class="skill-label">Base Damage:</span>
-                <span class="skill-value">{{ skill.baseDamage }}</span>
-              </div>
-              
-              <div class="skill-stat">
-                <span class="skill-label">Ratio:</span>
-                <span class="skill-value">{{ skill.statRatio }}x {{ skill.statType.toUpperCase() }}</span>
-              </div>
-              
-              <div class="skill-stat">
-                <span class="skill-label">Cooldown:</span>
-                <span class="skill-value">{{ skill.cooldown }} turns</span>
-              </div>
-            </div>
-            
-            <button 
-              class="btn skill-upgrade-btn" 
-              (click)="upgradeSkill(skill)" 
-              [disabled]="isUpgradingSkill || skill.level >= skill.maxLevel"
-            >
-              {{ isUpgradingSkill ? 'Upgrading...' : 'Upgrade Skill' }}
-            </button>
+        <div class="stat-group">
+          <div class="stat">
+            <span class="stat-label">DEF</span>
+            <span class="stat-value">{{ monster.def }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">VIT</span>
+            <span class="stat-value">{{ monster.vit }}</span>
           </div>
         </div>
       </div>
+      
+      <div class="monster-actions">
+        <button 
+          class="btn" 
+          (click)="gainExperience()" 
+          [disabled]="isGainingExp"
+        >
+          {{ isGainingExp ? 'En entraînement...' : 'Entraînement (+XP)' }}
+        </button>
+        
+        <button 
+          class="btn btn-secondary" 
+          (click)="levelUp()" 
+          [disabled]="isLevelingUp || monster.experience < monster.maxExperience"
+        >
+          {{ isLevelingUp ? 'Montée en niveau...' : 'Monter de niveau' }}
+        </button>
+        
+        <button 
+          class="btn btn-danger" 
+          (click)="releaseMonster()" 
+          [disabled]="isReleasing"
+        >
+          {{ isReleasing ? 'En libération...' : 'Libérer le monstre' }}
+        </button>
+      </div>
     </div>
     
-    <div *ngIf="errorMessage" class="error-message text-center mt-3">
-      {{ errorMessage }}
-    </div>
-    
-    <div class="back-link">
-      <a routerLink="/monsters" class="btn btn-secondary">Back to Monsters</a>
+    <div class="card skills-card">
+      <h3>Compétences</h3>
+      
+      <div class="skills-list">
+        <div *ngFor="let skill of monster.skills" class="skill-item">
+          <div class="skill-header">
+            <h4>{{ skill.name }}</h4>
+            <span class="skill-level">Niv. {{ skill.level }}/{{ skill.maxLevel }}</span>
+          </div>
+          
+          <div class="skill-details">
+            <div class="skill-stat">
+              <span class="skill-label">Dégâts de base :</span>
+              <span class="skill-value">{{ skill.baseDamage }}</span>
+            </div>
+            
+            <div class="skill-stat">
+              <span class="skill-label">Ratio :</span>
+              <span class="skill-value">{{ skill.statRatio }}x {{ skill.statType.toUpperCase() }}</span>
+            </div>
+            
+            <div class="skill-stat">
+              <span class="skill-label">Temps de recharge :</span>
+              <span class="skill-value">{{ skill.cooldown }} tours</span>
+            </div>
+          </div>
+          
+          <button 
+            class="btn skill-upgrade-btn" 
+            (click)="upgradeSkill(skill)" 
+            [disabled]="isUpgradingSkill || skill.level >= skill.maxLevel"
+          >
+            {{ isUpgradingSkill ? 'Amélioration...' : 'Améliorer la compétence' }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+  
+  <div *ngIf="errorMessage" class="error-message text-center mt-3">
+    {{ errorMessage }}
+  </div>
+  
+  <div class="back-link">
+    <a routerLink="/monsters" class="btn btn-secondary">Retour aux monstres</a>
+  </div>
+</div>

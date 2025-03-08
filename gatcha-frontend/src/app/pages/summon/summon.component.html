@@ -8,9 +8,9 @@
       
       <div *ngIf="!isLoadingProfile && user">
         <div class="invocation-info">
-          <p>Vous avez {{ user.monsterIds.length }} / {{ user.maxMonsters }} monstres.</p>
+          <p>Vous avez {{ user.monsterList.length }} / {{ user.maxMonsters }} monstres.</p>
           
-          <div *ngIf="user.monsterIds.length >= user.maxMonsters" class="error-message text-center">
+          <div *ngIf="user.monsterList.length >= user.maxMonsters" class="error-message text-center">
             <p>Votre stockage de monstres est plein ! Libérez des monstres ou améliorez votre niveau pour augmenter votre capacité.</p>
           </div>
         </div>
@@ -19,7 +19,7 @@
           <button 
             class="btn invocation-btn" 
             (click)="summonMonster()" 
-            [disabled]="isSummoning || user.monsterIds.length >= user.maxMonsters"
+            [disabled]="isSummoning || user.monsterList.length >= user.maxMonsters"
           >
             {{ isSummoning ? 'Invocation en cours...' : 'Invoquer un monstre' }}
           </button>

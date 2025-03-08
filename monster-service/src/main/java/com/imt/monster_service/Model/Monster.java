@@ -8,18 +8,23 @@ import java.util.List;
 
 @Document(collection = "monsters")
 public class Monster {
+    public enum ElementType {
+        FIRE, WATER, WIND
+    }
 
     @Id
     private Integer id;
     // id pour faciliter la mani
-    private String
-    private String element;
+    private String name;
+    private ElementType element;
     private int hp;
     private int atk;
     private int def;
     private int vit;
     private double lootRate;
     private List<Skill> skills;
+
+
 
     public Monster() {}
 
@@ -30,10 +35,10 @@ public class Monster {
         this.id = id;
     }
 
-    public String getElement() {
+    public ElementType getElement() {
         return element;
     }
-    public void setElement(String element) {
+    public void setElement(ElementType element) {
         this.element = element;
     }
 
@@ -81,7 +86,7 @@ public class Monster {
 
     public static final class Builder {
         private Integer id;
-        private String element;
+        private ElementType element;
         private int hp;
         private int atk;
         private int def;
@@ -102,7 +107,7 @@ public class Monster {
             return this;
         }
 
-        public Builder element(String element) {
+        public Builder element(ElementType element) {
             this.element = element;
             return this;
         }
