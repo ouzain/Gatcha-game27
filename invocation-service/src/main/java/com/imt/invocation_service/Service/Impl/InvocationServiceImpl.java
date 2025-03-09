@@ -3,10 +3,17 @@ package com.imt.invocation_service.Service.Impl;
 
 import com.imt.invocation_service.Dao.BaseMonsterRepository;
 import com.imt.invocation_service.Dao.InvocationRepository;
+import com.imt.invocation_service.Dto.MonsterDto;
+import com.imt.invocation_service.InvoModel.ApiResponse;
 import com.imt.invocation_service.InvoModel.BaseMonster;
 import com.imt.invocation_service.InvoModel.Invocation;
+import com.imt.invocation_service.OpenFeign.AuthServiceClient;
+import com.imt.invocation_service.OpenFeign.MonsterServiceClient;
+import com.imt.invocation_service.OpenFeign.PlayerClient;
 import com.imt.invocation_service.Service.InvocationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,71 +29,61 @@ public class InvocationServiceImpl implements InvocationService {
 
     @Autowired
     private InvocationRepository invocationRepository;
+    @Autowired
+    private MonsterServiceClient monsterClient; //
+    @Autowired
+    private AuthServiceClient authServiceClient;
+    @Autowired
+    private PlayerClient playerClient;
 
     private final Random random = new Random();
 
-    @Override
-    public void execute(Invocation invocation) {
-
-    }
 
     /**
      * Méthode principale pour invoquer un monstre
      * @param token Le token d'authentification
-     * @param playerId L'ID du joueur
      * @return L'entité Invocation, avec info sur le monstre invoqué
      */
     @Override
-    public Invocation invokeMonster(String token, String playerId) {
-        // 1) Vérifier le token auprès de l'API Auth
-        String usernameFromToken = checkAuthToken(token);
-        if (usernameFromToken == null) {
-            // Gérer l'erreur (token invalide) -> dans un vrai code, on ferait plutôt une exception 401
+    public Integer invokeMonster(String token) {
+        // vérifier le token auprès de api auth et récupérer le username associé
+        String playerUsername = checkAuthToken(token);
+        if (playerUsername == null) {
             throw new RuntimeException("Token invalide");
         }
 
-        // 2) Sélectionner le monstre aléatoirement selon les taux
-        BaseMonster baseMonster = pickRandomMonster();
-
-        // 3) Créer un objet Invocation en base (statut PENDING)
-        Invocation invocation = new Invocation();
-        invocation.setPlayerId(playerId);
-        invocation.setBaseMonsterId(baseMonster.getId().toString());
-        invocation.setCreatedAt(LocalDateTime.now());
-        invocation.setStatus("PENDING");
-        invocation.addLog("Start invocation");
-        invocation.addLog("Selected monster base: " + baseMonster.getName());
-
-        invocationRepository.save(invocation);
-
-        // 4) Appeler l’API Monstres pour créer l’instance de monstre
-        String createdMonsterId = callMonstersApiToCreateMonster(baseMonster, playerId);
-        invocation.setCreatedMonsterId(Integer.valueOf(createdMonsterId));
-        invocation.addLog("Called Monstres API -> success with ID = " + createdMonsterId);
-
-        // 5) Appeler l’API Joueur pour ajouter le monstre au joueur
-        boolean addedToPlayer = callJoueurApiToAddMonster(playerId, createdMonsterId);
-        if (!addedToPlayer) {
-            invocation.addLog("Error adding monster to player " + playerId);
-            invocation.setStatus("ERROR");
-            invocationRepository.save(invocation);
-            return invocation;
+        // Appeler l'API Monstre pour créer un monstre
+        MonsterDto monsterDto = fetchMonsterFromMonsterAPI();  // Appel à l'API Monstres via Feign
+        if (monsterDto == null) {
+            throw new RuntimeException("Erreur lors de la récupération du monstre");
         }
-        invocation.addLog("Added monster to player " + playerId + " -> success");
 
-        // 6) Mettre à jour le statut final en base
-        invocation.setStatus("FINISHED");
-        invocation.addLog("Invocation finished");
-        invocationRepository.save(invocation);
+        // Retourner l'ID du monstre créé
+        return monsterDto.getId(); // On retourne l'ID du monstre créé
+    }
 
-        return invocation;
+
+    //  appeler l'api monstre pour récupérer un monstre
+    private MonsterDto fetchMonsterFromMonsterAPI() {
+        try {
+            // Appel de l'API Monstres via Feign pour invoquer un monstre aléatoire
+            ResponseEntity<ApiResponse> response = monsterClient.generateRandomMonster();
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody().isSuccess()) {
+                return (MonsterDto) response.getBody().getData();
+            } else {
+                throw new RuntimeException("echec de recuperation d'un à partir de l'API Monstres");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * Algorithme de sélection d’un monstre basé sur le champ 'invocationRate'.
      */
 
-    private BaseMonster pickRandomMonster() {
+   /* private BaseMonster pickRandomMonster() {
         List<BaseMonster> allBaseMonsters = baseMonsterRepository.findAll();
         if (allBaseMonsters.isEmpty()) {
             throw new RuntimeException("No base monsters in database");
@@ -110,36 +107,36 @@ public class InvocationServiceImpl implements InvocationService {
 
         // Par sécurité, on retourne le dernier si jamais l'arrondi cause un souci
         return allBaseMonsters.get(allBaseMonsters.size() - 1);
-    }
+    }*/
 
     /**
-     * Simule l'appel à l'API Auth pour valider le token
+     * appel à l'API Auth pour valider le token
      */
+
+
     private String checkAuthToken(String token) {
-        // Dans la réalité, vous feriez un appel REST vers l'API Auth
-        // pour vérifier si le token est valide et récupérer le username ou playerId
-        // Ex: RESTTemplate, WebClient, Feign, etc.
-        // Retourne null si invalide, ou le username si valide.
-        return "player123"; // pour l'exemple
+        try {
+
+            String authorizationHeader = "Bearer " + token;
+
+            // appeler l'API d'auth pour vérifier le token
+            ResponseEntity<ApiResponse> response = authServiceClient.validateToken(authorizationHeader);
+
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().isSuccess()) {
+
+                return (String) response.getBody().getData(); // Le username est stocké dans 'data'
+            } else {
+                // Token invalide
+                return null;
+            }
+        } catch (Exception e) {
+            //TODO Gérer les erreurs (ex: échec de la connexion à l'API d'authentification)
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    /**
-     * Simule l'appel à l'API Monstres pour créer un monstre et renvoyer son ID
-     */
-    private String callMonstersApiToCreateMonster(BaseMonster baseMonster, String playerId) {
-        // Appel REST à l’API Monstres
-        // On suppose que l'API Monstres nous renvoie un ID unique (String)
-        return String.valueOf(random.nextInt(999999999)); // stub
-    }
-
-    /**
-     * Simule l'appel à l'API Joueur pour ajouter le monstre à la liste du joueur
-     */
-    private boolean callJoueurApiToAddMonster(String playerId, String monsterId) {
-        // Appel REST à l’API Joueur pour ajouter le monstre
-        // Return true si OK, false si KO
-        return true; // stub
-    }
 
     /**
      * Exemple de méthode pour relancer/recréer toutes les invocations

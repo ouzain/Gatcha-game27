@@ -6,17 +6,20 @@ import java.util.List;
 
 @Document(collection = "base_monsters")
 public class BaseMonster {
+    public enum ElementType {
+        FIRE, WATER, WIND
+    }
 
     @Id
     private Integer id;
     private String name;
-    private String element; // "feu", "eau", "vent", etc.
+    private ElementType element;
     private int hp;
     private int atk;
     private int def;
     private int speed;
-    private double invocationRate; // probabilité d'invocation en %
-    private List<Skill> skills; // Vos compétences de base
+    private double invocationRate; // taux d'invocation en %
+    private List<Skill> skills;
 
     public BaseMonster() {
     }
@@ -37,11 +40,11 @@ public class BaseMonster {
         this.name = name;
     }
 
-    public String getElement() {
+    public ElementType getElement() {
         return element;
     }
 
-    public void setElement(String element) {
+    public void setElement(ElementType element) {
         this.element = element;
     }
 
@@ -99,7 +102,7 @@ public class BaseMonster {
     public static class Builder {
         private Integer id;
         private String name;
-        private String element;
+        private ElementType element;
         private int hp;
         private int atk;
         private int def;
@@ -121,7 +124,7 @@ public class BaseMonster {
             return this;
         }
 
-        public Builder element(String element) {
+        public Builder element(ElementType element) {
             this.element = element;
             return this;
         }

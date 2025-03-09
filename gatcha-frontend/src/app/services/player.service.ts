@@ -47,11 +47,11 @@ export class PlayerService {
     return this.http.post<User>(`${environment.playerApiUrl}/player/level-up`, {});
   }
 
-  addMonster(monsterId: string): Observable<User> {
+  addMonster(monsterId: number): Observable<User> {
     return this.http.post<User>(`${environment.playerApiUrl}/player/monsters`, { monsterId });
   }
 
-  removeMonster(monsterId: string): Observable<User> {
+  removeMonster(monsterId: number): Observable<User> {
     return this.http.delete<User>(`${environment.playerApiUrl}/player/monsters/${monsterId}`);
   }
 }

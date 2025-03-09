@@ -31,10 +31,26 @@ export class MonstersComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load monsters. Please try again.';
+        this.errorMessage = 'Échec du chargement des monstres. Veuillez réessayer.';
         this.isLoading = false;
-        console.error('Error loading monsters:', error);
+        console.error('Erreur lors du chargement des monstres:', error);
       }
     });
   }
 }
+// Compare this snippet from src/app/pages/monsters/monsters.component.html:
+// <div *ngIf="isLoading">
+//   <p>Loading monsters...</p>
+// </div>
+//
+// <div *ngIf="errorMessage">
+//   <p>{{ errorMessage }}</p>
+// </div>
+//
+// <div *ngIf="!isLoading && !errorMessage">
+//   <h1>Monsters</h1>
+//   <ul>
+//     <li *ngFor="let monster of monsters">
+//       <a [routerLink]="['/monsters', monster.id]">{{ monster.name }}</a>
+//     </li>
+//   </ul>

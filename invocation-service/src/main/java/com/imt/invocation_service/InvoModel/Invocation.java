@@ -12,7 +12,7 @@ public class Invocation {
 
     @Id
     private String id;
-    private String playerId;
+    private String playerUsername; // Référence vers le nom d'utilisateur du joueur
     private String baseMonsterId; // Référence vers l'ID du monstre de base
     private Integer createdMonsterId; // ID créé par l'API Monstres
     private LocalDateTime createdAt;
@@ -31,13 +31,11 @@ public class Invocation {
         this.id = id;
     }
 
-    public String getPlayerId() {
-        return playerId;
+    public String getPlayerUsername() {
+        return playerUsername;
     }
 
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
-    }
+
 
     public String getBaseMonsterId() {
         return baseMonsterId;
@@ -79,12 +77,16 @@ public class Invocation {
         this.logs = logs;
     }
 
+    public void setPlayerUsername(String playerUsername) {
+        this.playerUsername = playerUsername;
+    }
+
     /**
      * Builder pour la classe Invocation
      */
     public static class Builder {
         private String id;
-        private String playerId;
+        private String playerUsername;
         private String baseMonsterId;
         private Integer createdMonsterId;
         private LocalDateTime createdAt;
@@ -104,8 +106,8 @@ public class Invocation {
             return this;
         }
 
-        public Builder playerId(String playerId) {
-            this.playerId = playerId;
+        public Builder playerUsername(String playerUsername) {
+            this.playerUsername = playerUsername;
             return this;
         }
 
@@ -140,7 +142,7 @@ public class Invocation {
         public Invocation build() {
             Invocation invocation = new Invocation();
             invocation.setId(this.id);
-            invocation.setPlayerId(this.playerId);
+            invocation.setPlayerUsername(this.playerUsername);
             invocation.setBaseMonsterId(this.baseMonsterId);
             invocation.setCreatedMonsterId(this.createdMonsterId);
             invocation.setCreatedAt(this.createdAt);

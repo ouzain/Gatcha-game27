@@ -1,11 +1,12 @@
 package com.imt.invocation_service.OpenFeign;
 
 
-import com.imt.invocation_service.InvoModel.BaseMonster;
-import org.springframework.cloud.openfeign.FeignClient;
+import com.imt.invocation_service.InvoModel.ApiResponse;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.MediaType;
+
 
 
 /**
@@ -14,11 +15,7 @@ import org.springframework.http.MediaType;
 @FeignClient(name = "monster-service")
 public interface MonsterServiceClient {
 
-    /**
-     * Correspond à POST /monsters/add
-     * Suppose que l’API Monstre renvoie un objet Monster en JSON
-     */
-    @PostMapping(value = "/monsters/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Integer addMonster(@RequestBody BaseMonster baseMonster);
 
+    @PostMapping("/summon")
+    ResponseEntity<ApiResponse> generateRandomMonster();
 }

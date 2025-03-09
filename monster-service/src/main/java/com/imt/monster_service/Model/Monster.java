@@ -14,8 +14,7 @@ public class Monster {
 
     @Id
     private Integer id;
-    // id pour faciliter la mani
-    private String name;
+    // //TODO : réfléchir sur la possibilité d'ajouter un uuid à un monstre pour faciliter la manip
     private ElementType element;
     private int hp;
     private int atk;
@@ -23,6 +22,8 @@ public class Monster {
     private int vit;
     private double lootRate;
     private List<Skill> skills;
+    private  int experience;
+    private int maxExperience;
 
 
 
@@ -83,7 +84,19 @@ public class Monster {
     public void setSkills(List<Skill> skills) {
         this.skills = skills;
     }
+    public int getExperience() {
+        return experience;
+    }
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
 
+    public int getMaxExperience() {
+        return maxExperience;
+    }
+    public void setMaxExperience(int maxExperience) {
+        this.maxExperience = maxExperience;
+    }
     public static final class Builder {
         private Integer id;
         private ElementType element;
@@ -93,11 +106,12 @@ public class Monster {
         private int vit;
         private double lootRate;
         private List<Skill> skills;
+        private int experience;
+        private int maxExperience;
 
-        // Constructeur privé
+
         private Builder() {}
 
-        // Méthode statique d'entrée
         public static Builder builder() {
             return new Builder();
         }
@@ -142,6 +156,15 @@ public class Monster {
             return this;
         }
 
+        public Builder experience(int experience) {
+            this.experience = experience;
+            return this;
+        }
+        public Builder maxExperience(int maxExperience) {
+            this.maxExperience = maxExperience;
+            return this;
+        }
+
         // Méthode build qui crée l'instance finale
         public Monster build() {
             Monster monster = new Monster();
@@ -153,6 +176,8 @@ public class Monster {
             monster.setVit(this.vit);
             monster.setLootRate(this.lootRate);
             monster.setSkills(this.skills);
+            monster.setExperience(this.experience);
+            monster.setMaxExperience(this.maxExperience);
             return monster;
         }
     }
@@ -175,6 +200,8 @@ public class Monster {
                 .vit(this.vit)
                 .lootRate(this.lootRate)
                 .skillDtos(skillDtos)
+                .experience(this.experience)
+                .maxExperience(this.maxExperience)
                 .build();
     }
 

@@ -1,10 +1,9 @@
-package com.imt.monster_service.Dto;
+package com.imt.invocation_service.Dto;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.imt.monster_service.Model.Monster;
-import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,7 +20,7 @@ public class MonsterDto implements Serializable {
     protected Integer id;
 
     @JsonProperty("element")
-    protected Monster.ElementType element;
+    protected ElementType element;
 
     @JsonProperty("hp")
     protected int hp;
@@ -73,7 +72,7 @@ public class MonsterDto implements Serializable {
         return id;
     }
 
-    public Monster.ElementType getElement() {
+    public ElementType getElement() {
         return element;
     }
 
@@ -107,35 +106,15 @@ public class MonsterDto implements Serializable {
         return maxExperience;
     }
 
-    /**
-     * Vérifie la validité minimale de ce DTO
-     */
-    public boolean isValid() {
-        return ObjectUtils.allNotNull(element);
-    }
 
     /**
      * Convertit ce DTO en entité Monster
      */
-    public Monster toMonsterEntity() {
-        return Monster.Builder
-                .builder().id(this.id)
-                .element(this.element)
-                .hp(this.hp)
-                .atk(this.atk)
-                .def(this.def)
-                .vit(this.vit)
-                .lootRate(this.lootRate).skills(this.skillDtos.stream()
-                        .map(SkillDto::toSkillEntity)
-                        .toList())
-                .experience(this.experience)
-                .maxExperience(this.maxExperience)
-                .build();
-    }
+
 
     public static final class Builder {
         private Integer id;
-        private Monster.ElementType element;
+        private ElementType element;
         private int hp;
         private int atk;
         private int def;
@@ -156,7 +135,7 @@ public class MonsterDto implements Serializable {
             return this;
         }
 
-        public Builder element(Monster.ElementType element) {
+        public Builder element(ElementType element) {
             this.element = element;
             return this;
         }

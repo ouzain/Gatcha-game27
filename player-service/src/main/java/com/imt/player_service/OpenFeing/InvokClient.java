@@ -12,6 +12,5 @@ public interface InvokClient {
 
 
     @PostMapping
-    ResponseEntity<Integer> invokeMonster(@RequestHeader("Authorization") String token,
-                                          @RequestParam String playerId);
+    ResponseEntity<Integer> invokeMonster(@RequestHeader("Authorization") String token);
 }

@@ -171,10 +171,9 @@ public class PlayerController {
     }
 
     @PostMapping(value = "/acquire-monster")
-    public ResponseEntity<ApiResponse> acquireMonster(@RequestHeader("Authorization") String token,
-                                                      @RequestParam String playerId) {
+    public ResponseEntity<ApiResponse> acquireMonster(@RequestHeader("Authorization") String token) {
         try {
-            ResponseEntity<Integer> response = invokClient.invokeMonster(token, playerId);
+            ResponseEntity<Integer> response = invokClient.invokeMonster(token);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.status(response.getStatusCode())

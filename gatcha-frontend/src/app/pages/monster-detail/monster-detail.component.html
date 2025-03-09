@@ -6,7 +6,7 @@
   <div *ngIf="!isLoading && monster" class="monster-detail">
     <div class="card monster-info">
       <div class="monster-header" [ngClass]="monster.elementType">
-        <h2>{{ monster.name }}</h2>
+        <!-- <h2>{{ monster.name }}</h2> -->
         <span class="element-badge">{{ monster.elementType | titlecase }}</span>
       </div>
       
@@ -85,19 +85,19 @@
       <div class="skills-list">
         <div *ngFor="let skill of monster.skills" class="skill-item">
           <div class="skill-header">
-            <h4>{{ skill.name }}</h4>
-            <span class="skill-level">Niv. {{ skill.level }}/{{ skill.maxLevel }}</span>
+            <!-- <h4>{{ skill.name }}</h4> -->
+            <span class="skill-level">Niv. {{ skill.level }}/{{ skill.lvlMax }}</span>
           </div>
           
           <div class="skill-details">
             <div class="skill-stat">
               <span class="skill-label">Dégâts de base :</span>
-              <span class="skill-value">{{ skill.baseDamage }}</span>
+              <span class="skill-value">{{ skill.dmg }}</span>
             </div>
             
             <div class="skill-stat">
               <span class="skill-label">Ratio :</span>
-              <span class="skill-value">{{ skill.statRatio }}x {{ skill.statType.toUpperCase() }}</span>
+              <span class="skill-value">{{ skill.ratio.percent }}x {{ skill.ratio.stat }}</span>
             </div>
             
             <div class="skill-stat">
@@ -109,7 +109,7 @@
           <button 
             class="btn skill-upgrade-btn" 
             (click)="upgradeSkill(skill)" 
-            [disabled]="isUpgradingSkill || skill.level >= skill.maxLevel"
+            [disabled]="isUpgradingSkill || skill.level >= skill.lvlMax"
           >
             {{ isUpgradingSkill ? 'Amélioration...' : 'Améliorer la compétence' }}
           </button>

@@ -67,43 +67,43 @@ export class BattleDetailComponent implements OnInit {
   }
   
   getMonsterName(monsterId: string): string {
-    if (!this.battle) return '';
+    // if (!this.battle) return '';
     
-    if (this.battle.monster1?.id === monsterId) {
-      return this.battle.monster1.name;
-    } else if (this.battle.monster2?.id === monsterId) {
-      return this.battle.monster2.name;
-    }
+    // if (this.battle.monster1?.id === monsterId) {
+    //   return this.battle.monster1.name;
+    // } else if (this.battle.monster2?.id === monsterId) {
+    //   return this.battle.monster2.name;
+    // }
     
     return '';
   }
   
   getMonsterElement(monsterId: string): string {
-    if (!this.battle) return '';
+    // if (!this.battle) return '';
     
-    if (this.battle.monster1?.id === monsterId) {
-      return this.battle.monster1.elementType;
-    } else if (this.battle.monster2?.id === monsterId) {
-      return this.battle.monster2.elementType;
-    }
+    // if (this.battle.monster1?.id === monsterId) {
+    //   return this.battle.monster1.elementType;
+    // } else if (this.battle.monster2?.id === monsterId) {
+    //   return this.battle.monster2.elementType;
+    // }
     
     return '';
   }
   
   getSkillName(monsterId: string, skillId: string): string {
-    if (!this.battle) return '';
+    // if (!this.battle) return '';
     
-    let monster = null;
-    if (this.battle.monster1?.id === monsterId) {
-      monster = this.battle.monster1;
-    } else if (this.battle.monster2?.id === monsterId) {
-      monster = this.battle.monster2;
-    }
+    // let monster = null;
+    // if (this.battle.monster1?.id === monsterId) {
+    //   monster = this.battle.monster1;
+    // } else if (this.battle.monster2?.id === monsterId) {
+    //   monster = this.battle.monster2;
+    // }
     
-    if (monster) {
-      const skill = monster.skills.find(s => s.id === skillId);
-      return skill ? skill.name : '';
-    }
+    // if (monster) {
+    //   const skill = monster.skills.find(s => s.id === skillId);
+    //   return skill ? skill.name : '';
+    // }
     
     return '';
   }

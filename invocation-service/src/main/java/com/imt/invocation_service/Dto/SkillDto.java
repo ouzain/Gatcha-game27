@@ -1,10 +1,8 @@
-package com.imt.monster_service.Dto;
-
+package com.imt.invocation_service.Dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.imt.monster_service.Model.Skill;
 
 
 import java.io.Serializable;
@@ -66,23 +64,7 @@ public class SkillDto implements Serializable {
     /**
      * Validation minimale (exemple)
      */
-    public boolean isValid() {
-        // On vérifie juste que ratio n'est pas null,
-        // et si ratio != null, alors ratio.isValid().
-        return this.ratio == null
-                || (this.ratio != null && this.ratio.isValid());
-    }
 
-    public Skill toSkillEntity() {
-        return Skill.Builder
-                .builder()
-                .num(this.num)
-                .dmg(this.dmg)
-                .ratio(this.ratio.toRatioEntity())
-                .cooldown(this.cooldown)
-                .lvlMax(this.lvlMax)
-                .build();
-    }
 
     public static final class Builder {
         private Integer num;

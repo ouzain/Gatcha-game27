@@ -27,11 +27,11 @@ export class MonsterDetailComponent implements OnInit {
     private monsterService: MonsterService,
     private playerService: PlayerService
   ) {}
-  
+
   ngOnInit(): void {
     this.loadMonster();
   }
-  
+
   loadMonster(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -40,7 +40,7 @@ export class MonsterDetailComponent implements OnInit {
       return;
     }
     
-    this.monsterService.getMonster(id).subscribe({
+    this.monsterService.getMonster(Number(id)).subscribe({
       next: (monster) => {
         this.monster = monster;
         this.isLoading = false;
@@ -72,7 +72,7 @@ export class MonsterDetailComponent implements OnInit {
       }
     });
   }
-  
+
   levelUp(): void {
     if (!this.monster || this.monster.experience < this.monster.maxExperience) return;
     
@@ -90,17 +90,17 @@ export class MonsterDetailComponent implements OnInit {
       }
     });
   }
-  
+
   upgradeSkill(skill: Skill): void {
-    if (!this.monster || skill.level >= skill.maxLevel) return;
+    if (!this.monster || skill.level >= skill.lvlMax) return;
     
     this.isUpgradingSkill = true;
     
-    this.monsterService.upgradeSkill(this.monster.id, skill.id).subscribe({
+    this.monsterService.upgradeSkill(this.monster.id, skill.num).subscribe({
       next: (updatedSkill) => {
         if (this.monster) {
           // Update the skill in the monster's skills array
-          const skillIndex = this.monster.skills.findIndex(s => s.id === updatedSkill.id);
+          const skillIndex = this.monster.skills.findIndex(s => s.num === updatedSkill.num);
           if (skillIndex !== -1) {
             this.monster.skills[skillIndex] = updatedSkill;
           }
@@ -114,7 +114,7 @@ export class MonsterDetailComponent implements OnInit {
       }
     });
   }
-  
+
   releaseMonster(): void {
     if (!this.monster) return;
     

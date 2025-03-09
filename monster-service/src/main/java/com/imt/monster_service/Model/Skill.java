@@ -3,7 +3,7 @@ package com.imt.monster_service.Model;
 import com.imt.monster_service.Dto.SkillDto;
 
 public class Skill {
-    private String name;
+    private Integer num;
     private int dmg;
     private Ratio ratio;
     private int cooldown;
@@ -11,12 +11,12 @@ public class Skill {
 
     public Skill() {}
 
-    public String getName() {
-        return name;
+    public Integer getNum() {
+        return num;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNum(Integer name) {
+        this.num = name;
     }
 
     public int getDmg() {
@@ -56,7 +56,7 @@ public class Skill {
      */
     public SkillDto toSkillDto() {
         return SkillDto.Builder.builder()
-                .name(this.name)
+                .num(this.num)
                 .dmg(this.dmg)
                 .cooldown(this.cooldown)
                 .lvlMax(this.lvlMax)
@@ -65,13 +65,12 @@ public class Skill {
     }
 
     public static final class Builder {
-        private String name;
+        private Integer num;
         private int dmg;
         private Ratio ratio;
         private int cooldown;
         private int lvlMax;
 
-        // Constructeur privé
         private Builder() {}
 
         // Méthode statique pour instancier le builder
@@ -79,8 +78,8 @@ public class Skill {
             return new Builder();
         }
 
-        public Builder name(String name) {
-            this.name = name;
+        public Builder num(Integer num) {
+            this.num = num;
             return this;
         }
 
@@ -107,7 +106,7 @@ public class Skill {
 
         public Skill build() {
             Skill skill = new Skill();
-            skill.setName(this.name);
+            skill.setNum(this.num);
             skill.setDmg(this.dmg);
             skill.setRatio(this.ratio);
             skill.setCooldown(this.cooldown);
