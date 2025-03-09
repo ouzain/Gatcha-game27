@@ -40,4 +40,48 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
 
     }
 
+    @Override
+    public boolean addExp(String token, int exp) {
+        Player foundPlayer = playerRepository.findByToken(token);
+        double experienceLevel = 50;
+        if (foundPlayer == null) {
+            throw new RuntimeException("User not found: " + token);
+        }
+
+        double newExp = foundPlayer.getExperience() + exp;
+        int requiredExp = (int) (experienceLevel * 1.1);
+        boolean levelUp = false;
+
+        if (newExp >= requiredExp) {
+            Player updatedPlayer = Player.Builder.builder()
+                    .id(foundPlayer.getId())
+                    .username(foundPlayer.getUsername())
+                    .token(foundPlayer.getToken())
+                    .level(foundPlayer.getLevel() + 1)
+                    .experience(requiredExp)
+                    .monsterList(foundPlayer.getMonsterList())
+                    .maxExperience(foundPlayer.getMaxExperience())
+                    .maxMonsters(foundPlayer.getMaxMonsters() + 1)
+                    .build();
+            playerRepository.save(updatedPlayer);
+            levelUp = true;
+            experienceLevel = requiredExp;
+        } else {
+            Player updatedPlayer = Player.Builder.builder()
+                    .id(foundPlayer.getId())
+                    .username(foundPlayer.getUsername())
+                    .token(foundPlayer.getToken())
+                    .level(foundPlayer.getLevel())
+                    .experience((int) newExp)
+                    .monsterList(foundPlayer.getMonsterList())
+                    .maxExperience(foundPlayer.getMaxExperience())
+                    .maxMonsters(foundPlayer.getMaxMonsters())
+                    .build();
+            playerRepository.save(updatedPlayer);
+        }
+
+
+        return levelUp;
+    }
+
 }

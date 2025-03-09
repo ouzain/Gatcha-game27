@@ -1,6 +1,7 @@
 package com.imt.invocation_service.Service.Impl;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imt.invocation_service.Dao.BaseMonsterRepository;
 import com.imt.invocation_service.Dao.InvocationRepository;
 import com.imt.invocation_service.Dto.MonsterDto;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 
@@ -47,7 +50,7 @@ public class InvocationServiceImpl implements InvocationService {
     @Override
     public Integer invokeMonster(String token) {
         // vérifier le token auprès de api auth et récupérer le username associé
-        String playerUsername = checkAuthToken(token);
+        String playerUsername = checkAuthToken(token).getBody();
         if (playerUsername == null) {
             throw new RuntimeException("Token invalide");
         }
@@ -114,27 +117,49 @@ public class InvocationServiceImpl implements InvocationService {
      */
 
 
-    private String checkAuthToken(String token) {
-        try {
+//    private String checkAuthToken(String token) {
+//        try {
+//
+//            String authorizationHeader = "Bearer " + token;
+//
+//            // appeler l'API d'auth pour vérifier le token
+//            ResponseEntity<ApiResponse> response = authServiceClient.validateToken(authorizationHeader);
+//
+//
+//            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().isSuccess()) {
+//
+//                return (String) response.getBody().getData(); // Le username est stocké dans 'data'
+//            } else {
+//                // Token invalide
+//                return null;
+//            }
+//        } catch (Exception e) {
+//            //TODO Gérer les erreurs (ex: échec de la connexion à l'API d'authentification)
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
-            String authorizationHeader = "Bearer " + token;
 
-            // appeler l'API d'auth pour vérifier le token
-            ResponseEntity<ApiResponse> response = authServiceClient.validateToken(authorizationHeader);
+    private ResponseEntity<String> checkAuthToken(String token) {
+        ResponseEntity<String> response = authServiceClient.validateToken("Bearer " + token);
 
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().isSuccess()) {
-
-                return (String) response.getBody().getData(); // Le username est stocké dans 'data'
-            } else {
-                // Token invalide
-                return null;
-            }
-        } catch (Exception e) {
-            //TODO Gérer les erreurs (ex: échec de la connexion à l'API d'authentification)
-            e.printStackTrace();
-            return null;
+        if(!response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.status(response.getStatusCode())
+                    .body(new RuntimeException("Erreur lors de la validation du token : " + response.getBody()).getMessage());
         }
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+            // extraire le username du champ  "data"
+            String username = jsonResponse.get("data").asText();
+            return ResponseEntity.ok(username);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

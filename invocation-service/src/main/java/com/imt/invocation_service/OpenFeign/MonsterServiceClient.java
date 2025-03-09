@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public interface MonsterServiceClient {
 
 
-    @PostMapping("/summon")
+    @PostMapping("/monsters/summon")
     ResponseEntity<ApiResponse> generateRandomMonster();
 }

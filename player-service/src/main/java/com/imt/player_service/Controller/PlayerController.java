@@ -173,14 +173,14 @@ public class PlayerController {
     @PostMapping(value = "/acquire-monster")
     public ResponseEntity<ApiResponse> acquireMonster(@RequestHeader("Authorization") String token) {
         try {
-            ResponseEntity<Integer> response = invokClient.invokeMonster(token);
+            ResponseEntity<ApiResponse> response = invokClient.invokeMonster(token);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.status(response.getStatusCode())
                         .body(new ApiResponse("Échec de l'acquisition du monstre : " + response.getBody(), false));
             }
 
-            Integer monsterId = response.getBody();
+            Integer monsterId = (Integer) response.getBody().getData();
             if (monsterId == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse("Erreur : l'ID du monstre est introuvable.", false));
@@ -194,6 +194,18 @@ public class PlayerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Erreur lors de l'acquisition du monstre : " + e.getMessage(), false));
         }
+    }
+
+    @PostMapping(value = "/add-exp-user")
+    public ResponseEntity<?> addExpUser(@RequestParam("Authorization") String token, @RequestParam(value = "exp", required = true) int exp) {
+        Player client = getPlayerService.byToken(token);
+        if (client == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("Aucun joueur trouvé pour le token d'authentification fourni.", false));
+        }
+        updatePlayerService.addExp(token, exp);
+
+        return ResponseEntity.ok(new ApiResponse("Expérience ajoutée avec succès !", true));
     }
 
 }

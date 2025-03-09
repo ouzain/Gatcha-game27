@@ -25,6 +25,6 @@ public interface AuthServiceClient {
      * Retourne un username si OK, 401 sinon.
      */
     @GetMapping("/api-auth/validate")
-    ResponseEntity<ApiResponse> validateToken(@RequestHeader("Authorization") String token);
+    ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token);
 }
 
