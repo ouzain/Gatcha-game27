@@ -1,0 +1,13 @@
+# Étape de construction pour le Player Service (maven build)
+FROM maven:3.8.7-openjdk-21-slim AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Étape pour l'exécution de l'API Player
+FROM openjdk:21
+WORKDIR /app
+COPY --from=build /app/target/player-service.jar player-service.jar
+EXPOSE 8081
+CMD ["java", "-jar", "player-service.jar"]

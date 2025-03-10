@@ -18,6 +18,49 @@ services:
     ports:
       - "8761:8761"
 
+  player-service:
+    build:
+      context: ../player-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - DB_HOST=mango #  variable d'environnement pour une base de données
+    depends_on:
+      - mango
+  authentication-service:
+    build:
+      context: ../authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=mango
+    depends_on:
+      - mango
+
+  monster-service:
+    build:
+      context: ../match-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - DB_HOST=mango
+    depends_on:
+      - mango
+
+  invocation-service:
+    build:
+      context: ../invocation-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - DB_HOST=mango
+    depends_on:
+      - mango
+
   gatcha-frontend:
     build: .
     container_name: gatcha-frontend
