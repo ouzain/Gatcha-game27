@@ -41,7 +41,7 @@ services:
 
   monster-service:
     build:
-      context: ../match-service
+      context: ../monster-service
       dockerfile: Dockerfile
     ports:
       - "8083:8083"
@@ -62,7 +62,9 @@ services:
       - mango
 
   gatcha-frontend:
-    build: .
+    build:
+        context: ../gatcha-frontend
+        dockerfile: Dockerfile
     container_name: gatcha-frontend
     ports:
       - "4200:4200"

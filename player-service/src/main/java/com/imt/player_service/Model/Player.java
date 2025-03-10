@@ -54,9 +54,6 @@ public class Player {
         this.monsterList = monsterList != null ? monsterList : new ArrayList<>();
     }
 
-    public Player() {
-
-    }
 
 
 
