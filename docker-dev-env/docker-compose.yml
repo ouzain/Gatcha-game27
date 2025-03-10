@@ -11,12 +11,16 @@ services:
     image: mongo
     volumes:
       - mongo-data:/data/db
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
   eureka-server:
     build: ../eureka-server
     container_name: eureka-server
     ports:
       - "8761:8761"
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
   player-service:
     build:
@@ -28,6 +32,9 @@ services:
       - DB_HOST=mango #  variable d'environnement pour une base de données
     depends_on:
       - mango
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
+
   authentication-service:
     build:
       context: ../authentication-service
@@ -38,6 +45,8 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
   monster-service:
     build:
@@ -49,6 +58,8 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
   invocation-service:
     build:
@@ -60,21 +71,26 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
   gatcha-frontend:
     build:
-        context: ../gatcha-frontend
-        dockerfile: Dockerfile
+      context: ../gatcha-frontend
+      dockerfile: Dockerfile
     container_name: gatcha-frontend
     ports:
       - "4200:4200"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
+    networks:
+      - microservices-net  # Ajout du service dans le réseau
 
 networks:
   microservices-net:
-    driver: bridge
+    driver: bridge  # Définition du réseau personnalisé avec le driver "bridge"
+
 volumes:
   mongo-data:
     driver: local
