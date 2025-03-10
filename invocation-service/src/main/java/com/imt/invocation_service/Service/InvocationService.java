@@ -8,7 +8,7 @@ public interface InvocationService {
 
     List<Invocation> getAllInvocations();
 
-    Integer invokeMonster(String token);
+   // Integer invokeMonster(String token);
 
     void recreateAllInvocations();
 }

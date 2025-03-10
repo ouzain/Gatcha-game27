@@ -31,7 +31,7 @@ public class InvocationController {
     private MonsterServiceClient monsterClient;
 
     @PostMapping("/summon-monster")
-    public ResponseEntity<ApiResponse> invokeMonster(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<ApiResponse> invokeMonster(@RequestParam("Authorization") String token) {
         try {
             // Vérifier le token auprès de l'API d'authentification
             String playerUsername = checkAuthToken(token);  // Appel à l'API d'authentification
@@ -47,8 +47,11 @@ public class InvocationController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse("Erreur lors de la récupération du monstre", false));
             }
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.valueToTree(monsterDto);
+            MonsterDto fetchedMonster = jsonNode.traverse(objectMapper).readValueAs(MonsterDto.class);
 
-            return ResponseEntity.ok(new ApiResponse("Monstre invoqué avec succès ! (ID: " + monsterDto.getId() + ")", true));
+            return ResponseEntity.ok(new ApiResponse("Monstre invoqué avec succès ! (ID: " + fetchedMonster.getId() + ")", true,fetchedMonster.getId()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Erreur lors de l'invocation du monstre : " + e.getMessage(), false));
@@ -77,9 +80,14 @@ public class InvocationController {
     // Appel à l'API Monstres pour récupérer un monstre aléatoire
     private MonsterDto fetchMonsterFromMonsterAPI() {
         try {
+            // Appel de l'API Monstres via Feign pour invoquer un monstre aléatoire
             ResponseEntity<ApiResponse> response = monsterClient.generateRandomMonster();
+
             if (response.getStatusCode().is2xxSuccessful() && response.getBody().isSuccess()) {
-                return (MonsterDto) response.getBody().getData();
+                // Désérialisation correcte de la réponse JSON en MonsterDto
+                ObjectMapper objectMapper = new ObjectMapper();
+                MonsterDto monsterDto = objectMapper.convertValue(response.getBody().getData(), MonsterDto.class);
+                return monsterDto;
             } else {
                 return null;
             }
@@ -88,6 +96,7 @@ public class InvocationController {
             return null;
         }
     }
+
 
     @GetMapping
     public List<Invocation> getAllInvocations() {

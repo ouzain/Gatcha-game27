@@ -47,40 +47,22 @@ public class InvocationServiceImpl implements InvocationService {
      * @param token Le token d'authentification
      * @return L'entité Invocation, avec info sur le monstre invoqué
      */
-    @Override
-    public Integer invokeMonster(String token) {
-        // vérifier le token auprès de api auth et récupérer le username associé
-        String playerUsername = checkAuthToken(token).getBody();
-        if (playerUsername == null) {
-            throw new RuntimeException("Token invalide");
-        }
-
-        // Appeler l'API Monstre pour créer un monstre
-        MonsterDto monsterDto = fetchMonsterFromMonsterAPI();  // Appel à l'API Monstres via Feign
-        if (monsterDto == null) {
-            throw new RuntimeException("Erreur lors de la récupération du monstre");
-        }
-
-        // Retourner l'ID du monstre créé
-        return monsterDto.getId(); // On retourne l'ID du monstre créé
-    }
+//    @Override
+//    public Integer invokeMonster(String token) {
+//        // vérifier le token auprès de api auth et récupérer le username associé
+//        String playerUsername = checkAuthToken(token).getBody();
+//        if (playerUsername == null) {
+//            throw new RuntimeException("Token invalide");
+//        }
+//
+//
+//
+//        // Retourner l'ID du monstre créé
+//        return monsterDto.getId(); // On retourne l'ID du monstre créé
+//    }
 
 
-    //  appeler l'api monstre pour récupérer un monstre
-    private MonsterDto fetchMonsterFromMonsterAPI() {
-        try {
-            // Appel de l'API Monstres via Feign pour invoquer un monstre aléatoire
-            ResponseEntity<ApiResponse> response = monsterClient.generateRandomMonster();
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody().isSuccess()) {
-                return (MonsterDto) response.getBody().getData();
-            } else {
-                throw new RuntimeException("echec de recuperation d'un à partir de l'API Monstres");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
     /**
      * Algorithme de sélection d’un monstre basé sur le champ 'invocationRate'.

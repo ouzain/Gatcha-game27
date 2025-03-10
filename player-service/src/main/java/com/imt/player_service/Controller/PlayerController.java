@@ -171,16 +171,20 @@ public class PlayerController {
     }
 
     @PostMapping(value = "/acquire-monster")
-    public ResponseEntity<ApiResponse> acquireMonster(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<ApiResponse> acquireMonster(@RequestParam("Authorization") String token) {
         try {
-            ResponseEntity<ApiResponse> response = invokClient.invokeMonster(token);
+            ResponseEntity<String> response = invokClient.invokeMonster(token);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.status(response.getStatusCode())
                         .body(new ApiResponse("Échec de l'acquisition du monstre : " + response.getBody(), false));
             }
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response.getBody());
 
-            Integer monsterId = (Integer) response.getBody().getData();
+            // extraire le token du champ  "data"
+            Integer monsterId = jsonResponse.get("data").asInt();
+
             if (monsterId == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse("Erreur : l'ID du monstre est introuvable.", false));

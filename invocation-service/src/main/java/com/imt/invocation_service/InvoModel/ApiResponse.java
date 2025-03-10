@@ -9,6 +9,8 @@ public class ApiResponse {
         this.message = message;
         this.success = success;
     }
+    public ApiResponse() {
+    }
 
     public ApiResponse(String message, boolean success, Object data) {
         this.message = message;

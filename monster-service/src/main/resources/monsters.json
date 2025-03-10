@@ -1,0 +1,502 @@
+[
+  {
+    "valid": true,
+    "id": 0,
+    "element": "FIRE",
+    "hp": 1200,
+    "atk": 450,
+    "def": 300,
+    "vit": 85,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 125,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 25.0
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 250,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 27.5
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 425,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 40.0
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 30,
+    "maxExperience": 50
+  },
+  {
+    "valid": true,
+    "id": 1,
+    "element": "WATER",
+    "hp": 1210,
+    "atk": 455,
+    "def": 303,
+    "vit": 87,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 135,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 25.5
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 270,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 28.0
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 455,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 40.5
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 32,
+    "maxExperience": 52
+  },
+  {
+    "valid": true,
+    "id": 2,
+    "element": "FIRE",
+    "hp": 1220,
+    "atk": 460,
+    "def": 306,
+    "vit": 89,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 145,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 26.0
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 290,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 28.5
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 485,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 41.0
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 34,
+    "maxExperience": 54
+  },
+  {
+    "valid": true,
+    "id": 3,
+    "element": "WATER",
+    "hp": 1230,
+    "atk": 465,
+    "def": 309,
+    "vit": 91,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 155,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 26.5
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 310,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 29.0
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 515,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 41.5
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 36,
+    "maxExperience": 56
+  },
+  {
+    "valid": true,
+    "id": 4,
+    "element": "FIRE",
+    "hp": 1240,
+    "atk": 470,
+    "def": 312,
+    "vit": 93,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 165,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 27.0
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 330,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 29.5
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 545,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 42.0
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 38,
+    "maxExperience": 58
+  },
+  {
+    "valid": true,
+    "id": 5,
+    "element": "WATER",
+    "hp": 1250,
+    "atk": 475,
+    "def": 315,
+    "vit": 95,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 175,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 27.5
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 350,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 30.0
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 575,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 42.5
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 40,
+    "maxExperience": 60
+  },
+  {
+    "valid": true,
+    "id": 6,
+    "element": "FIRE",
+    "hp": 1260,
+    "atk": 480,
+    "def": 318,
+    "vit": 97,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 185,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 28.0
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 370,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 30.5
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 605,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 43.0
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 42,
+    "maxExperience": 62
+  },
+  {
+    "valid": true,
+    "id": 7,
+    "element": "WATER",
+    "hp": 1270,
+    "atk": 485,
+    "def": 321,
+    "vit": 99,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 195,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 28.5
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 390,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 31.0
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 635,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 43.5
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 44,
+    "maxExperience": 64
+  },
+  {
+    "valid": true,
+    "id": 8,
+    "element": "FIRE",
+    "hp": 1280,
+    "atk": 490,
+    "def": 324,
+    "vit": 101,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 205,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 29.0
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 410,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 31.5
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 665,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 44.0
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 46,
+    "maxExperience": 66
+  },
+  {
+    "valid": true,
+    "id": 9,
+    "element": "WATER",
+    "hp": 1290,
+    "atk": 495,
+    "def": 327,
+    "vit": 103,
+    "loot_rate": 0.3,
+    "skillDtos": [
+      {
+        "valid": true,
+        "num": 1,
+        "dmg": 215,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 29.5
+        },
+        "cooldown": 0,
+        "lvl_max": 5
+      },
+      {
+        "valid": true,
+        "num": 2,
+        "dmg": 430,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 32.0
+        },
+        "cooldown": 2,
+        "lvl_max": 7
+      },
+      {
+        "valid": true,
+        "num": 3,
+        "dmg": 695,
+        "ratio": {
+          "valid": true,
+          "stat": "atk",
+          "percent": 44.5
+        },
+        "cooldown": 5,
+        "lvl_max": 5
+      }
+    ],
+    "experience": 48,
+    "maxExperience": 68
+  }
+]
