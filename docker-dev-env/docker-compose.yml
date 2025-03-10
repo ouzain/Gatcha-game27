@@ -1,26 +1,48 @@
-version: '3.3'
+version: '3.4'
+
 services:
+
   mango:
-    ports:
-      - '27017:27017'
+    image: mongo
     container_name: player_micro_service_mongo
-    restart: on-failure
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongoadmin
       - MONGO_INITDB_ROOT_PASSWORD=password
-    image: mongo
     volumes:
       - mongo-data:/data/db
+    expose:
+      - 27017
+    ports:
+      - '27017:27017'
+    restart: on-failure
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "127.0.0.1/admin",
+          "--eval",
+          "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net  # Service connected to the custom network
+
 
   eureka-server:
-    build: ../eureka-server
+    build:
+      context: ../eureka-server
+      dockerfile: Dockerfile
     container_name: eureka-server
     ports:
       - "8761:8761"
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net  # Service connected to the custom network
+
 
   player-service:
     build:
@@ -29,11 +51,13 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - DB_HOST=mango #  variable d'environnement pour une base de données
+      - DB_HOST=mango # MongoDB connection
     depends_on:
       - mango
+      - eureka-server
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net # Service connected to the custom network
+
 
   authentication-service:
     build:
@@ -45,8 +69,10 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+      - eureka-server
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net #
+
 
   monster-service:
     build:
@@ -58,8 +84,10 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+      - eureka-server
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net
+
 
   invocation-service:
     build:
@@ -71,8 +99,10 @@ services:
       - DB_HOST=mango
     depends_on:
       - mango
+      - eureka-server
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net # Service connected to the custom network
+
 
   gatcha-frontend:
     build:
@@ -85,12 +115,11 @@ services:
       - NODE_ENV=production
     restart: unless-stopped
     networks:
-      - microservices-net  # Ajout du service dans le réseau
+      - microservices-net
 
 networks:
   microservices-net:
-    driver: bridge  # Définition du réseau personnalisé avec le driver "bridge"
+    driver: bridge
 
 volumes:
   mongo-data:
-    driver: local
