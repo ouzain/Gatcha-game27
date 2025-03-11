@@ -36,6 +36,15 @@ public class PlayerController {
     @Autowired
     InvokClient invokClient;
 
+    private String getUsernameFromToken(String token) {
+        // le token est sous forme 'username-date-time'
+        String[] parts = token.split("-");
+        if (parts.length >= 1) {
+            return parts[0]; // la première partie est le username
+        }
+        return null; // si le format du token n'est pas valide
+    }
+
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addPlayer(@RequestBody PlayerDto playerDto) {
         if (playerDto == null || playerDto.getUsername() == null || playerDto.getPassword() == null) {
@@ -189,8 +198,8 @@ public class PlayerController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(new ApiResponse("Erreur : l'ID du monstre est introuvable.", false));
             }
-
-            Player client = getPlayerService.byToken(token);
+            String clientUsername = getUsernameFromToken(token);
+            Player client = getPlayerService.byUserName(clientUsername);
             client.addMonster(monsterId);
 
             return ResponseEntity.ok(new ApiResponse("Monstre acquis avec succès ! (ID: " + monsterId + ")", true));
