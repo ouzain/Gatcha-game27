@@ -1,7 +1,6 @@
 version: '3.4'
 
 services:
-
   mango:
     image: mongo
     container_name: player_micro_service_mongo
@@ -30,9 +29,10 @@ services:
       retries: 5
       start_period: 10s
     networks:
-      - microservices-net  # Service connected to the custom network
+      - microservices-net  # Ajout du service dans le réseau
 
-
+  # TODO : voir si je peux remplacer l'app eureka-server par l'image officielle de Netflix Eureka
+  # Eureka server for service registry
   eureka-server:
     build:
       context: ../eureka-server
@@ -51,13 +51,12 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - DB_HOST=mango # MongoDB connection
+      - DB_HOST=mango # MongoDB
     depends_on:
       - mango
       - eureka-server
     networks:
-      - microservices-net # Service connected to the custom network
-
+      - microservices-net
 
   authentication-service:
     build:
@@ -71,8 +70,7 @@ services:
       - mango
       - eureka-server
     networks:
-      - microservices-net #
-
+      - microservices-net
 
   monster-service:
     build:
@@ -88,7 +86,6 @@ services:
     networks:
       - microservices-net
 
-
   invocation-service:
     build:
       context: ../invocation-service
@@ -101,8 +98,7 @@ services:
       - mango
       - eureka-server
     networks:
-      - microservices-net # Service connected to the custom network
-
+      - microservices-net
 
   gatcha-frontend:
     build:
@@ -123,3 +119,4 @@ networks:
 
 volumes:
   mongo-data:
+    driver: local
