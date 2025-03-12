@@ -38,19 +38,3 @@ export class MonstersComponent implements OnInit {
     });
   }
 }
-// Compare this snippet from src/app/pages/monsters/monsters.component.html:
-// <div *ngIf="isLoading">
-//   <p>Loading monsters...</p>
-// </div>
-//
-// <div *ngIf="errorMessage">
-//   <p>{{ errorMessage }}</p>
-// </div>
-//
-// <div *ngIf="!isLoading && !errorMessage">
-//   <h1>Monsters</h1>
-//   <ul>
-//     <li *ngFor="let monster of monsters">
-//       <a [routerLink]="['/monsters', monster.id]">{{ monster.name }}</a>
-//     </li>
-//   </ul>

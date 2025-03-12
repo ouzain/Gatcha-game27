@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink,ActivatedRoute } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';  
 
 @Component({
   selector: 'app-profile',
@@ -18,12 +19,12 @@ export class ProfileComponent implements OnInit {
   isLevelingUp = false;
   errorMessage = '';
   
-  constructor(private playerService: PlayerService,  private route: ActivatedRoute,) {}
+  constructor(private playerService: PlayerService,  private route: ActivatedRoute, private authService : AuthService) {}
   
   ngOnInit(): void {
      //  récupérer le username depuis l'URL
      this.route.queryParams.subscribe(params => {
-      const username = params['username'];
+      const username = this.authService.getUsername();
       
       if (username) {
         this.loadProfile(username);

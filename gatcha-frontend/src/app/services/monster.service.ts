@@ -11,22 +11,22 @@ export class MonsterService {
   constructor(private http: HttpClient) {}
 
   getMonsters(): Observable<Monster[]> {
-    return this.http.get<Monster[]>(`${environment.monsterApiUrl}/monsters`);
+    return this.http.get<Monster[]>(`${environment.monsterApiUrl}/get-all`);
   }
 
   getMonster(id: number): Observable<Monster> {
-    return this.http.get<Monster>(`${environment.monsterApiUrl}/monsters/${id}`);
+    return this.http.get<Monster>(`${environment.monsterApiUrl}/${id}`);
   }
 
   gainExperience(id: number, amount: number): Observable<Monster> {
-    return this.http.post<Monster>(`${environment.monsterApiUrl}/monsters/${id}/experience`, { amount });
+    return this.http.post<Monster>(`${environment.monsterApiUrl}/${id}/experience`, { amount });
   }
 
   levelUp(id: number): Observable<Monster> {
-    return this.http.post<Monster>(`${environment.monsterApiUrl}/monsters/${id}/level-up`, {});
+    return this.http.post<Monster>(`${environment.monsterApiUrl}/${id}/level-up`, {});
   }
 
   upgradeSkill(monsterId: number, skillId: number): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.monsterApiUrl}/monsters/${monsterId}/skills/${skillId}/upgrade`, {});
+    return this.http.post<Skill>(`${environment.monsterApiUrl}/${monsterId}/skills/${skillId}/upgrade`, {});
   }
 }

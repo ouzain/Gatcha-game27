@@ -5,6 +5,7 @@ import { SummonService } from '../../services/summon.service';
 import { PlayerService } from '../../services/player.service';
 import { Monster } from '../../models/monster.model';
 import { User } from '../../models/user.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-summon',
@@ -21,16 +22,17 @@ export class SummonComponent implements OnInit {
   isLoadingHistory = true;
   isSummoning = false;
   errorMessage = '';
-  
+
   constructor(
     private summonService: SummonService,
     private playerService: PlayerService,
-    private route : ActivatedRoute
+    private route: ActivatedRoute,
+    private authService : AuthService
   ) {}
-  
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const username = params['username'];
+      const username = this.authService.getUsername();
 
       if (username) {
         this.loadProfile(username);
@@ -41,10 +43,10 @@ export class SummonComponent implements OnInit {
 
     this.loadSummonHistory();
   }
-  
+
   loadProfile(username: string): void {
     this.isLoadingProfile = true;
-    
+
     this.playerService.getProfile(username).subscribe({
       next: (user) => {
         this.user = user;
@@ -57,10 +59,10 @@ export class SummonComponent implements OnInit {
       }
     });
   }
-  
+
   loadSummonHistory(): void {
     this.isLoadingHistory = true;
-    
+
     this.summonService.getSummonHistory().subscribe({
       next: (monsters) => {
         this.summonHistory = monsters;
@@ -72,13 +74,13 @@ export class SummonComponent implements OnInit {
       }
     });
   }
-  
+
   summonMonster(): void {
     if (!this.user || this.user.monsterList.length >= this.user.maxMonsters) return;
-    
+
     this.isSummoning = true;
     this.summonedMonster = null;
-    
+
     this.summonService.summonMonster().subscribe({
       next: (monster) => {
         this.summonedMonster = monster;

@@ -30,7 +30,7 @@ public class Player {
     private  int experience;
     private int maxExperience;
     private int maxMonsters;
-    private  List<Integer> monsterList;
+    private  List<Integer> monsterList= new ArrayList<>();
 
 
     /**

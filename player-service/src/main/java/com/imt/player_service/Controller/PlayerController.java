@@ -201,6 +201,7 @@ public class PlayerController {
             String clientUsername = getUsernameFromToken(token);
             Player client = getPlayerService.byUserName(clientUsername);
             client.addMonster(monsterId);
+            addPlayerService.execute(client);
 
             return ResponseEntity.ok(new ApiResponse("Monstre acquis avec succès ! (ID: " + monsterId + ")", true));
         } catch (Exception e) {
@@ -220,5 +221,53 @@ public class PlayerController {
 
         return ResponseEntity.ok(new ApiResponse("Expérience ajoutée avec succès !", true));
     }
+
+    @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> authenticatePlayer(@RequestBody AuthEntityDto authEntityDto) {
+        if (authEntityDto == null || authEntityDto.getUsername() == null || authEntityDto.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Le DTO d'authentification est invalide (username/password manquants).", false));
+        }
+        AuthServiceClient.AuthRequest authRequest = new AuthServiceClient.AuthRequest();
+        authRequest.setUsername(authEntityDto.getUsername());
+        authRequest.setPassword(authEntityDto.getPassword());
+
+        try {
+            // Appel à l'API d'authentification pour obtenir le token
+            ResponseEntity<String> loginResponse = authServiceClient.login(authRequest);
+
+            if (!loginResponse.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.status(loginResponse.getStatusCode())
+                        .body(new ApiResponse("Échec de l'authentification : " + loginResponse.getBody(), false));
+            }
+
+            // Récupération du token depuis la réponse JSON de l'API d'authentification
+            String token = loginResponse.getBody();
+
+            if (token == null || token.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiResponse("Impossible de récupérer le token d'authentification.", false));
+            }
+
+            // Mettre à jour les informations du joueur avec le nouveau token
+            Player player = getPlayerService.byUserName(authEntityDto.getUsername());
+            if (player == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse("Le joueur n'a pas été trouvé.", false));
+            }
+
+            // Mise à jour du token du joueur
+            player.setToken(token);
+            updatePlayerService.execute(player);
+
+            // Retourner une réponse avec le token mis à jour
+            return ResponseEntity.ok(new ApiResponse("Authentification réussie, token mis à jour.", true));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("Erreur lors de l'appel à l'API d'authentification : " + e.getMessage(), false));
+        }
+    }
+
 
 }

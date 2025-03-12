@@ -43,7 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private LocalDateTime calculateTokenExpiration() {
         // calcul date d'expiration du token : une heure à partir de maintenant
-        return LocalDateTime.now().plusHours(1);
+        return LocalDateTime.now().plusHours(2);
     }
 
      private boolean isTokenExpired(LocalDateTime expiration) {
