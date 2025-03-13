@@ -95,9 +95,9 @@ export class BattlesComponent implements OnInit {
         this.battleForm.reset();
       },
       error: (error) => {
-        this.errorMessage = 'Failed to start battle. Please try again.';
+        this.errorMessage = 'Échec du lancement du combat. Veuillez réessayer';
         this.isStartingBattle = false;
-        console.error('Error starting battle:', error);
+        console.error('Erreur lors du lancement de la bataille : ', error);
       }
     });
   }

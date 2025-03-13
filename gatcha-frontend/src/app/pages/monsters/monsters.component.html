@@ -1,7 +1,7 @@
 <div class="monsters-container">
   <h2 class="text-center">Vos Monstres</h2>
   
-  <div *ngIf="isLoading" class="text-center">
+  <div *ngIf="isLoading && !user?.monsterList?.length" class="text-center">
     <p>Chargement des monstres...</p>
   </div>
   

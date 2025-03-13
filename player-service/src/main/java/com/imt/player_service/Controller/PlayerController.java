@@ -2,6 +2,7 @@ package com.imt.player_service.Controller;
 
 import com.imt.player_service.Dto.PlayerDto;
 import com.imt.player_service.OpenFeing.AuthServiceClient;
+import com.imt.player_service.OpenFeing.AuthServiceClient.AuthRequest;
 import com.imt.player_service.OpenFeing.InvokClient;
 import com.imt.player_service.Services.PlayerServices.AddPlayerService;
 import com.imt.player_service.Services.PlayerServices.DeletePlayerService;
@@ -98,7 +99,7 @@ public class PlayerController {
                         .experience(playerDto.getExperience() == 0 ? 50 : playerDto.getExperience())
                         .monsterList(playerDto.getMonsterList() != null ? playerDto.getMonsterList() : new ArrayList<Integer>())
                         .maxExperience(100)
-                        .maxMonsters(maxMonsters)  // assignation dynamique de maxMonsters
+                        .maxMonsters(playerDto.getLevel() == 0 ? 3 : maxMonsters)  // assignation dynamique de maxMonsters
                         .build();
 
                 addPlayerService.execute(player);
@@ -120,10 +121,10 @@ public class PlayerController {
     // Méthode pour calculer maxMonsters en fonction du niveau
     private int calculateMaxMonsters(int level) {
         // logique pour ajuster maxMonsters selon le level
-        if (level == 1) {
-            return 3;  // Niveau 1, 3 monstres
-        } else if (level == 2) {
-            return 5;  // Niveau 2, 5 monstres
+        if (level == 2) {
+            return 5;  // Niveau 1, 3 monstres
+        } else if (level == 3) {
+            return 7;  // Niveau 2, 5 monstres
         } else {
             return 5 + (level - 2) * 2;  // Plus de monstres pour les niveaux supérieurs
         }
@@ -203,7 +204,7 @@ public class PlayerController {
             client.addMonster(monsterId);
             addPlayerService.execute(client);
 
-            return ResponseEntity.ok(new ApiResponse("Monstre acquis avec succès ! (ID: " + monsterId + ")", true));
+            return ResponseEntity.ok(new ApiResponse("Monstre acquis avec succès ! (ID: " + monsterId + ")", true, monsterId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Erreur lors de l'acquisition du monstre : " + e.getMessage(), false));
@@ -223,7 +224,7 @@ public class PlayerController {
     }
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> authenticatePlayer(@RequestBody AuthEntityDto authEntityDto) {
+    public ResponseEntity<ApiResponse> authenticatePlayer(@RequestBody AuthRequest authEntityDto) {
         if (authEntityDto == null || authEntityDto.getUsername() == null || authEntityDto.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Le DTO d'authentification est invalide (username/password manquants).", false));
@@ -241,27 +242,39 @@ public class PlayerController {
                         .body(new ApiResponse("Échec de l'authentification : " + loginResponse.getBody(), false));
             }
 
-            // Récupération du token depuis la réponse JSON de l'API d'authentification
-            String token = loginResponse.getBody();
+            // Parser la reponse json pour extraire le token
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonResponse = objectMapper.readTree(loginResponse.getBody());
 
-            if (token == null || token.isEmpty()) {
+                // extraire le token du champ  "data"
+                String token = jsonResponse.get("data").asText();
+
+                if (token == null ||token.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new ApiResponse("Impossible de récupérer le token d’authentification.", false));
+                }
+
+
+                // Mettre à jour les informations du joueur avec le nouveau token
+                Player player = getPlayerService.byUserName(authEntityDto.getUsername());
+                if (player == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiResponse("Le joueur n'a pas été trouvé.", false));
+                }
+
+                // Mise à jour du token du joueur
+                player.setToken(token);
+                updatePlayerService.execute(player);
+
+                // retourner une réponse avec le token mis à jour
+                return ResponseEntity.ok(new ApiResponse("Authentification réussie, token mis à jour.", true,token));
+
+            } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new ApiResponse("Impossible de récupérer le token d'authentification.", false));
+                        .body(new ApiResponse("Erreur lors de la récupération du token : " + e.getMessage(), false));
             }
 
-            // Mettre à jour les informations du joueur avec le nouveau token
-            Player player = getPlayerService.byUserName(authEntityDto.getUsername());
-            if (player == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse("Le joueur n'a pas été trouvé.", false));
-            }
-
-            // Mise à jour du token du joueur
-            player.setToken(token);
-            updatePlayerService.execute(player);
-
-            // Retourner une réponse avec le token mis à jour
-            return ResponseEntity.ok(new ApiResponse("Authentification réussie, token mis à jour.", true));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

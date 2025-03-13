@@ -58,8 +58,9 @@ export class RegisterComponent {
 
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Registration failed. Please try again.';
+        this.errorMessage = error.message || 'Échec de l\'inscription. Veuillez réessayer';
         this.isLoading = false;
+        console.error('Erreur lors de l\'enregistrement:', error);
       }
     });
   }

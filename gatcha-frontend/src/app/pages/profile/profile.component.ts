@@ -23,15 +23,13 @@ export class ProfileComponent implements OnInit {
   
   ngOnInit(): void {
      //  récupérer le username depuis l'URL
-     this.route.queryParams.subscribe(params => {
-      const username = this.authService.getUsername();
+     const username = this.authService.getUsername();
       
       if (username) {
         this.loadProfile(username);
       } else {
         this.errorMessage = 'No username provided.';
       }
-    });
   }
 
   loadProfile(username: string): void {

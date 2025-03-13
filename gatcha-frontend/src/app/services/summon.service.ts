@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Monster } from '../models/monster.model';
@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class SummonService {
+  summondedMonsterId: number = 0;
   constructor(
     private http: HttpClient,
     private monsterService: MonsterService,
@@ -24,16 +25,20 @@ export class SummonService {
       throw new Error('Token non disponible');
     }
 
-    const params = new HttpParams().set('Authorization', `Bearer ${token}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     // On passe le token dans la requête HTTP
-    return this.http.post<any>(`${environment.playerApiUrl}/acquire-monster`, {}, { params }).pipe(
-      switchMap(response => {
-        // Récupérer l'ID du monstre depuis la réponse
-        const monsterId = response.data;
+    const params = new HttpParams().set('Authorization', token);
 
-        // Utiliser l'ID pour récupérer le monstre complet via MonsterService
-        return this.monsterService.getMonster(monsterId);
+    return this.http.post<any>(`${environment.playerApiUrl}/acquire-monster`, null, { params }).pipe(
+      switchMap(response => {
+      // Récupérer l'ID du monstre depuis la réponse
+      const monsterId = response.data;
+      this.summondedMonsterId = monsterId;
+      console.log('Monstre invoqué avec l\'id :', monsterId);
+
+      // Utiliser l'ID pour récupérer le monstre complet via MonsterService
+      return this.monsterService.getMonster(monsterId);
       })
     );
   }

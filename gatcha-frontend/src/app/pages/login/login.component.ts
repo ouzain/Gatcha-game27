@@ -45,8 +45,9 @@ export class LoginComponent {
         this.router.navigate(['/profile'], { queryParams: { username } });
       },
       error: (error) => {
-        this.errorMessage = error.message || 'Login failed. Please try again.';
+        this.errorMessage = error.message || 'La connexion a échoué. Merci de reessayer.';
         this.isLoading = false;
+        console.error('Login error:', error);
       }
     });
   }

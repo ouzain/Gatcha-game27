@@ -93,6 +93,9 @@ public class Player {
         this.monsterList.add(monsterId);
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     private Player(Builder builder) {
         this.id = builder.id;

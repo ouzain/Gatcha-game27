@@ -25,7 +25,10 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post<AuthResponse>(`${environment.authApiUrl}/login`, { username, password }) // On attend un objet AuthResponse
+    // Nettoyer le localStorage avant de tenter une nouvelle connexion
+    this.clearLocalStorage();
+
+    return this.http.post<AuthResponse>(`${environment.playerApiUrl}/authenticate`, { username, password })
       .pipe(
         tap(response => {
           const token = response.data; // Récupérer le token du champ "data"
@@ -44,7 +47,6 @@ export class AuthService {
         })
       );
   }
-  
 
   register(username: string, password: string): Observable<boolean> {
     return this.http.post<AuthResponse>(`${environment.playerApiUrl}/add`, { username, password })
@@ -64,8 +66,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USERNAME_KEY);
+    this.clearLocalStorage();
     this.isAuthenticatedSubject.next(false);
   }
 
@@ -87,6 +88,12 @@ export class AuthService {
 
   private hasToken(): boolean {
     return !!this.getToken(); // Vérifier si le token existe dans le localStorage
+  }
+
+  private clearLocalStorage(): void {
+    // Supprimer tous les éléments stockés dans le localStorage
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USERNAME_KEY);
   }
 
   private checkTokenValidity(): void {

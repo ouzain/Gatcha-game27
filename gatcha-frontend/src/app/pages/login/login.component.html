@@ -32,7 +32,7 @@
         </div>
         
         <div *ngIf="errorMessage" class="error-message mb-3">
-          {{ errorMessage }}
+          {{ "La connexion a échoué. Veuillez vérifier vos informations de connexion." }}
         </div>
         
         <button type="submit" class="btn w-100" [disabled]="loginForm.invalid || isLoading">
