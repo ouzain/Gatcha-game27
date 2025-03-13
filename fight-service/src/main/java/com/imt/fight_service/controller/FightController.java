@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contrôleur pour gérer les combats.
- * 
+ *
  * - Démarrer un combat entre deux équipes de trois monstres avec validation
  * - Récupérer l'historique des combats
  * - Rejouer un combat spécifique avec vérification
@@ -25,7 +26,7 @@ public class FightController {
 
     /**
      * Démarrer un combat entre deux équipes de trois monstres.
-     * 
+     *
      * @param monsters Liste des six monstres (3 par équipe)
      * @return Log du combat avec le résultat et les détails des tours.
      */
@@ -48,7 +49,7 @@ public class FightController {
 
     /**
      * Récupérer l'historique des combats avec pagination.
-     * 
+     *
      * @param page Numéro de la page demandée.
      * @param size Nombre d'éléments par page.
      * @return Liste des combats enregistrés paginée.
@@ -62,13 +63,13 @@ public class FightController {
 
     /**
      * Rejouer un combat spécifique.
-     * 
+     *
      * @param id ID du combat.
      * @return Log du combat rejoué ou 404 si non trouvé.
      */
     @GetMapping("/{id}")
     public ResponseEntity<FightLog> getFightById(@PathVariable String id) {
-        FightLog fightLog = fightService.getFightById(id);
-        return fightLog != null ? ResponseEntity.ok(fightLog) : ResponseEntity.notFound().build();
+        Optional<FightLog> fightLog = fightService.getFightById(id); // Correction ici
+        return fightLog.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

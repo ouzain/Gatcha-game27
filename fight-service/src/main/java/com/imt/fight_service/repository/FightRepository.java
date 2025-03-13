@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Repository pour la gestion des logs de combat.
- * 
+ *
  * Permet de récupérer et stocker les combats enregistrés dans MongoDB.
  */
 @Repository
@@ -18,7 +18,7 @@ public interface FightRepository extends MongoRepository<FightLog, String> {
 
     /**
      * Récupère tous les logs de combat avec pagination.
-     * 
+     *
      * @param pageable Paramètres de pagination.
      * @return Page contenant les logs de combat.
      */
@@ -26,11 +26,9 @@ public interface FightRepository extends MongoRepository<FightLog, String> {
 
     /**
      * Récupère les combats impliquant une équipe spécifique.
-     * 
-     * @param team Nom d'un monstre dans une équipe.
+     *
+     * @param monsterName Nom d'un monstre dans une équipe.
      * @return Liste des combats où ce monstre a participé.
      */
-    List<FightLog> findByTeam1ContainingOrTeam2Containing(String team1, String team2);
+    List<FightLog> findByTeam1ContainingOrTeam2Containing(String monsterName, String monsterName2);
 }
-
-
