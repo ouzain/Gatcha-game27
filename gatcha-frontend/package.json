@@ -1,6 +1,9 @@
 {
   "name": "gacha-game-frontend",
   "private": true,
+  "engines": {
+    "node": ">=18.19.1"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

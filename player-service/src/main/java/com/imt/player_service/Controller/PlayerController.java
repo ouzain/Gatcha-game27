@@ -88,24 +88,21 @@ public class PlayerController {
                             .body(new ApiResponse("Impossible de récupérer le token d’authentification.", false));
                 }
 
-                // Définir maxMonsters en fonction du niveau du joueur
-                int maxMonsters = calculateMaxMonsters(playerDto.getLevel());
-
                 // Création et enregistrement du player
                 Player player = Player.Builder.builder()
                         .username(playerDto.getUsername())
                         .token(token)
-                        .level(playerDto.getLevel() == 0 ? 1 : playerDto.getLevel())
-                        .experience(playerDto.getExperience() == 0 ? 50 : playerDto.getExperience())
-                        .monsterList(playerDto.getMonsterList() != null ? playerDto.getMonsterList() : new ArrayList<Integer>())
+                        .level(1) // niveau initial
+                        .experience(50) // experience initiale
+                        .monsterList(new ArrayList<Integer>()) // liste vide de monstres
                         .maxExperience(100)
-                        .maxMonsters(playerDto.getLevel() == 0 ? 3 : maxMonsters)  // assignation dynamique de maxMonsters
+                        .maxMonsters(3)  // 3 monstres pour le niveau 1
                         .build();
 
                 addPlayerService.execute(player);
 
                 return ResponseEntity.status(HttpStatus.CREATED)
-                        .body(new ApiResponse("Le joueur " + playerDto.getUsername() + " a été créé et authentifié avec succès.", true));
+                        .body(new ApiResponse("Le joueur " + playerDto.getUsername() + " a été créé et authentifié avec succès.", true, token));
 
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -118,17 +115,6 @@ public class PlayerController {
         }
     }
 
-    // Méthode pour calculer maxMonsters en fonction du niveau
-    private int calculateMaxMonsters(int level) {
-        // logique pour ajuster maxMonsters selon le level
-        if (level == 2) {
-            return 5;  // Niveau 1, 3 monstres
-        } else if (level == 3) {
-            return 7;  // Niveau 2, 5 monstres
-        } else {
-            return 5 + (level - 2) * 2;  // Plus de monstres pour les niveaux supérieurs
-        }
-    }
 
     @GetMapping(value = "/get-user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> getPlayer(@RequestParam(value = "username", required = true) String username) {
@@ -213,14 +199,16 @@ public class PlayerController {
 
     @PostMapping(value = "/add-exp-user")
     public ResponseEntity<?> addExpUser(@RequestParam("Authorization") String token, @RequestParam(value = "exp", required = true) int exp) {
-        Player client = getPlayerService.byToken(token);
+        String playerUsername = getUsernameFromToken(token);
+        Player client = getPlayerService.byUserName(playerUsername);
         if (client == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse("Aucun joueur trouvé pour le token d'authentification fourni.", false));
         }
         updatePlayerService.addExp(token, exp);
+        Player updatedPlayer = getPlayerService.byUserName(playerUsername);
 
-        return ResponseEntity.ok(new ApiResponse("Expérience ajoutée avec succès !", true));
+        return ResponseEntity.ok(new ApiResponse("Expérience ajoutée avec succès !", true,updatedPlayer));
     }
 
     @PostMapping(value = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -282,5 +270,20 @@ public class PlayerController {
         }
     }
 
+    @PostMapping(value = "/calculate-max-monsters")
+    public ResponseEntity<ApiResponse> calculateMaxMonsters(@RequestParam(value = "username", required = true) String username,
+                                                            @RequestParam(value = "currentLevel", required = true) int currentLevel) {
+        Player client = getPlayerService.byUserName(username);
+        if (client == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("Aucun joueur trouvé pour le token d'authentification fourni.", false));
+        }
+
+        int newMaxMonster=updatePlayerService.calculateMaxMonsters( currentLevel);
+        client.setMaxMonsters(newMaxMonster);
+        addPlayerService.execute(client);
+
+        return ResponseEntity.ok(new ApiResponse("Calcul du nombre maximum de monstres réussi.", true, newMaxMonster));
+    }
 
 }

@@ -37,7 +37,7 @@ export class SummonComponent implements OnInit {
       if (username) {
         this.loadProfile(username);
       } else {
-        this.errorMessage = 'No username provided.';
+        this.errorMessage = 'Aucun nom d\'utilisateur fourni.';
       }
     });
 
@@ -53,9 +53,9 @@ export class SummonComponent implements OnInit {
         this.isLoadingProfile = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load profile. Please try again.';
+        this.errorMessage = 'Échec du chargement du profil. Veuillez réessayer.';
         this.isLoadingProfile = false;
-        console.error('Error loading profile:', error);
+        console.error('Erreur de chargement du profil:', error);
       }
     });
   }
@@ -69,7 +69,7 @@ export class SummonComponent implements OnInit {
         this.isLoadingHistory = false;
       },
       error: (error) => {
-        console.error('Error loading summon history:', error);
+        console.error('Erreur de chargement de l\'historique des invocations:', error);
         this.isLoadingHistory = false;
       }
     });
@@ -93,9 +93,9 @@ export class SummonComponent implements OnInit {
         this.loadSummonHistory();
       },
       error: (error) => {
-        this.errorMessage = 'Failed to summon monster. Please try again.';
+        this.errorMessage = 'Échec de l\'invocation d\'un monstre. Veuillez réessayer.';
         this.isSummoning = false;
-        console.error('Error summoning monster:', error);
+        console.error('Erreur lors de l\'invocation du monstre :', error);
       }
     });
   }

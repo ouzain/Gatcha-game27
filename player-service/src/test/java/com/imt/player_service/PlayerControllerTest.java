@@ -1,163 +1,164 @@
 /*
 package com.imt.player_service;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.imt.player_service.Controller.PlayerController;
-import com.imt.player_service.Dto.PlayerDto;
 import com.imt.player_service.Model.ApiResponse;
-import com.imt.player_service.Model.Player;
-import com.imt.player_service.Services.PlayerServices.AddPlayerService;
+import com.imt.player_service.OpenFeing.AuthServiceClient;
+import com.imt.player_service.Services.PlayerServices.DeletePlayerService;
 import com.imt.player_service.Services.PlayerServices.GetPlayerService;
 import com.imt.player_service.Services.PlayerServices.UpdatePlayerService;
-import com.imt.player_service.Services.PlayerServices.DeletePlayerService;
-import com.imt.player_service.OpenFeing.AuthServiceClient;
+import com.imt.player_service.Services.PlayerServices.AddPlayerService;
 import com.imt.player_service.OpenFeing.InvokClient;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.imt.player_service.Model.Player;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(PlayerController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class PlayerControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
     @Mock
-    private AddPlayerService addPlayerService;
-    @Mock
-    private GetPlayerService getPlayerService;
-    @Mock
-    private DeletePlayerService deletePlayerService;
-    @Mock
-    private UpdatePlayerService updatePlayerService;
-    @Mock
     private AuthServiceClient authServiceClient;
+
     @Mock
     private InvokClient invokClient;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Mock
+    private GetPlayerService getPlayerService;
 
-    private PlayerDto playerDto;
+    @Mock
+    private AddPlayerService addPlayerService;
+
+    @Mock
+    private UpdatePlayerService updatePlayerService;
+
+    @Mock
+    private DeletePlayerService deletePlayerService;
+
+    private static final String TOKEN_VALID = "valid-token";
+    private static final String TOKEN_INVALID = "invalid-token";
+    private static final String USERNAME = "player1";
+    private static final String PASSWORD = "password123";
+
+    private Player player;
 
     @BeforeEach
-    public void setUp() {
-        PlayerDto playerDto= PlayerDto.Builder.builder()
-                .username("TestUser")
-                .password("TestPassword")
-                .level(1)
-                .experience(50)
-                .monsterList(new ArrayList<>())
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+        player = Player.Builder.builder()
+                .username(USERNAME)
+                .token(TOKEN_VALID)
                 .build();
     }
 
+    // Test pour l'endpoint /acquire-monster
     @Test
-    public void testAddPlayer_Success() throws Exception {
-        when(authServiceClient.registerPlayerCredentials(any())).thenReturn(ResponseEntity.ok("Success"));
-        when(authServiceClient.login(any())).thenReturn(ResponseEntity.ok("{\"data\":\"fake_token\"}"));
-        when(addPlayerService.execute(any(Player.class))).thenReturn(null);
+    public void testAcquireMonsterSuccess() throws Exception {
+        Integer summonedMonsterId = 42;
+        when(invokClient.invokeMonster(anyString())).thenReturn(summonedMonsterId);
+        when(getPlayerService.byToken(TOKEN_VALID)).thenReturn(player);
 
-        mockMvc.perform(post("/api/player/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(playerDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Le joueur TestUser a été créé et authentifié avec succès."))
-                .andExpect(jsonPath("$.success").value(true));
-
-        verify(addPlayerService, times(1)).execute(any(Player.class));
-    }
-
-    @Test
-    public void testAddPlayer_Failure_InvalidInput() throws Exception {
-        playerDto.setUsername(null);  // Invalid input
-
-        mockMvc.perform(post("/api/player/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(playerDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Le DTO du player est invalide (username/password manquant)."))
-                .andExpect(jsonPath("$.success").value(false));
-
-        verify(addPlayerService, never()).execute(any(Player.class));
-    }
-
-    @Test
-    public void testGetPlayer_Success() throws Exception {
-        Player player = new Player("TestUser", "token", 1, 50, new ArrayList<>());
-        when(getPlayerService.byUserName("TestUser")).thenReturn(player);
-
-        mockMvc.perform(get("/api/player/get-user")
-                        .param("username", "TestUser"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/acquire-monster")
+                        .header("Authorization", "Bearer " + TOKEN_VALID))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Joueur trouvé avec succès"))
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Monstre acquis avec succès ! (ID: 42)"))
+                .andExpect(jsonPath("$.data").value(42));
 
-        verify(getPlayerService, times(1)).byUserName("TestUser");
+        verify(invokClient, times(1)).invokeMonster(anyString());
     }
 
     @Test
-    public void testGetPlayer_NotFound() throws Exception {
-        when(getPlayerService.byUserName("NonExistentUser")).thenReturn(null);
+    public void testAcquireMonsterFailure_invocationError() throws Exception {
+        when(invokClient.invokeMonster(anyString())).thenReturn(new ResponseEntity<>("Service unavailable", HttpStatus.SERVICE_UNAVAILABLE));
 
-        mockMvc.perform(get("/api/player/get-user")
-                        .param("username", "NonExistentUser"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Aucun joueur trouvé pour le nom d'utilisateur : NonExistentUser"))
-                .andExpect(jsonPath("$.success").value(false));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/acquire-monster")
+                        .header("Authorization", "Bearer " + TOKEN_VALID))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Échec de l'acquisition du monstre : Service unavailable"));
 
-        verify(getPlayerService, times(1)).byUserName("NonExistentUser");
+        verify(invokClient, times(1)).invokeMonster(anyString());
     }
 
     @Test
-    public void testUpdatePlayer_Success() throws Exception {
-        Player player = new Player("TestUser", "token", 1, 50, new ArrayList<>());
-        when(updatePlayerService.execute(any(Player.class))).thenReturn(null);
+    public void testAcquireMonsterFailure_invalidToken() throws Exception {
+        when(authServiceClient.validateToken("Bearer " + TOKEN_INVALID)).thenReturn(false);
 
-        mockMvc.perform(patch("/api/player/update")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(playerDto)))
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.message").value("Le joueur a été mis à jour avec succès."))
-                .andExpect(jsonPath("$.success").value(true));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/acquire-monster")
+                        .header("Authorization", "Bearer " + TOKEN_INVALID))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Token invalide"));
 
+        verify(invokClient, never()).invokeMonster(anyString());
+    }
+
+    // Test pour l'endpoint /authenticate
+    @Test
+    public void testAuthenticateSuccess() throws Exception {
+        String fakeJwtToken = "fake-token";
+        when(authServiceClient.authenticate(anyString(), anyString())).thenReturn(new ApiResponse("Authentication successful", true, fakeJwtToken));
+        when(getPlayerService.byUserName(USERNAME)).thenReturn(player);
+        when(updatePlayerService.execute(any(Player.class))).thenReturn(player);
+
+        String jsonRequest = "{ \"username\": \"" + USERNAME + "\", \"password\": \"" + PASSWORD + "\" }";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/authenticate")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Authentification réussie, token mis à jour."))
+                .andExpect(jsonPath("$.data").value("fake-jwt-token"));
+
+        verify(authServiceClient, times(1)).authenticate(USERNAME, PASSWORD);
+        verify(getPlayerService, times(1)).byUserName(USERNAME);
         verify(updatePlayerService, times(1)).execute(any(Player.class));
     }
 
     @Test
-    public void testDeletePlayer_Success() throws Exception {
-        when(getPlayerService.byUserName("TestUser")).thenReturn(new Player("TestUser", "token", 1, 50, new ArrayList<>()));
+    public void testAuthenticateFailure_invalidCredentials() throws Exception {
+        when(authServiceClient.authenticate(anyString(), anyString())).thenReturn(new ApiResponse("Invalid credentials", false, ""));
 
-        mockMvc.perform(delete("/api/player/delete")
-                        .param("username", "TestUser"))
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.message").value("Le joueur a été supprimé avec succès."))
-                .andExpect(jsonPath("$.success").value(true));
+        String jsonRequest = "{ \"username\": \"" + USERNAME + "\", \"password\": \"wrongpassword\" }";
 
-        verify(deletePlayerService, times(1)).execute("TestUser");
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/authenticate")
+                        .contentType("application/json")
+                        .content(jsonRequest))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Échec de l'authentification"));
+
+        verify(getPlayerService, never()).byUserName(any());
+        verify(updatePlayerService, never()).execute(any());
     }
 
     @Test
-    public void testDeletePlayer_NotFound() throws Exception {
-        when(getPlayerService.byUserName("NonExistentUser")).thenReturn(null);
+    public void testAuthenticateFailure_playerNotFound() throws Exception {
+        when(authServiceClient.authenticate(anyString(), anyString())).thenReturn(new ApiResponse("Authentication successful", true, "fake-jwt-token"));
+        when(getPlayerService.byUserName(USERNAME)).thenReturn(null);
 
-        mockMvc.perform(delete("/api/player/delete")
-                        .param("username", "NonExistentUser"))
+        String jsonRequest = "{ \"username\": \"" + USERNAME + "\", \"password\": \"" + PASSWORD + "\" }";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/authenticate")
+                        .contentType("application/json")
+                        .content(jsonRequest))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Aucun joueur trouvé pour le nom d'utilisateur : NonExistentUser"))
-                .andExpect(jsonPath("$.success").value(false));
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Le joueur n'a pas été trouvé."));
 
-        verify(deletePlayerService, never()).execute("NonExistentUser");
+        verify(getPlayerService, times(1)).byUserName(USERNAME);
+        verify(updatePlayerService, never()).execute(any());
     }
-}
-*/
+}*/

@@ -9,6 +9,14 @@ import org.springframework.stereotype.Service;
 @Service(value = "UpdateUserService")
 public class UpdatePlayerServiceImpl extends AbstractPlayerService implements UpdatePlayerService {
 
+    private String getUsernameFromToken(String token) {
+        // le token est sous forme 'username-date-time'
+        String[] parts = token.split("-");
+        if (parts.length >= 1) {
+            return parts[0]; // la première partie est le username
+        }
+        return null; // si le format du token n'est pas valide
+    }
     @Override
     public void execute(Player player) {
         Player foundPlayer = playerRepository.findByUsername(player.getUsername());
@@ -42,7 +50,8 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
 
     @Override
     public boolean addExp(String token, int exp) {
-        Player foundPlayer = playerRepository.findByToken(token);
+        String playerUsername = getUsernameFromToken(token);
+        Player foundPlayer = playerRepository.findByUsername(playerUsername);
         double experienceLevel = 50;
         if (foundPlayer == null) {
             throw new RuntimeException("User not found: " + token);
@@ -82,6 +91,22 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
 
 
         return levelUp;
+    }
+
+    // Méthode pour calculer maxMonsters en fonction du niveau
+    @Override
+    public int calculateMaxMonsters(int level) {
+        // logique pour ajuster maxMonsters selon le level
+        if (level == 2) {
+            return 5;  // Niveau 1, 3 monstres
+        } else if (level == 3) {
+            return 7;  // Niveau 2, 5 monstres
+        } else if (level == 1) {
+            return 3;
+
+        } else {
+            return 5 + (level - 2) * 2;  // Plus de monstres pour les niveaux supérieurs
+        }
     }
 
 }

@@ -49,6 +49,7 @@ export class AuthService {
   }
 
   register(username: string, password: string): Observable<boolean> {
+    this.clearLocalStorage(); // Nettoyer le localStorage avant de tenter une nouvelle inscription
     return this.http.post<AuthResponse>(`${environment.playerApiUrl}/add`, { username, password })
       .pipe(
         tap(response => {

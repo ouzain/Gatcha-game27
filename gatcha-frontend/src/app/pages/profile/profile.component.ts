@@ -55,18 +55,20 @@ export class ProfileComponent implements OnInit {
   
   gainExperience(): void {
     if (!this.user) return;
-    
+
     this.isGainingExp = true;
-    // Gain a random amount between 10 and 30
+
+    // Gagner un montant aléatoire entre 10 et 30.
     const amount = Math.floor(Math.random() * 21) + 10;
-    
+
+    // Appel au service pour ajouter de l'expérience
     this.playerService.gainExperience(amount).subscribe({
       next: (user) => {
-        this.user = user;
+        this.user = user; // Mettre à jour l'utilisateur avec les nouvelles données
         this.isGainingExp = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to gain experience. Please try again.';
+        this.errorMessage = "Échec de l'acquisition de l'expérience. Veuillez réessayer.";
         this.isGainingExp = false;
         console.error('Error gaining experience:', error);
       }

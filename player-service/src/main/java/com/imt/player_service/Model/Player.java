@@ -97,6 +97,10 @@ public class Player {
         this.token = token;
     }
 
+    public void setMaxMonsters(int maxMonsters) {
+        this.maxMonsters = maxMonsters;
+    }
+
     private Player(Builder builder) {
         this.id = builder.id;
         this.username = builder.username;

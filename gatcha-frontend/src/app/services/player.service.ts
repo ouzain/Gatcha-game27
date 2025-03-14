@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user.model';
 import { map } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 interface ApiResponse {
   success: boolean;
@@ -15,7 +16,7 @@ interface ApiResponse {
   providedIn: 'root'
 })
 export class PlayerService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService : AuthService ) {}
 
   getProfile(username: string): Observable<User> {
     return this.http.get<ApiResponse>(`${environment.playerApiUrl}/get-user`, {
@@ -40,7 +41,16 @@ export class PlayerService {
   }
 
   gainExperience(amount: number): Observable<User> {
-    return this.http.post<User>(`${environment.playerApiUrl}/player/experience`, { amount });
+    const token = this.authService.getToken(); // Récupérer le token d'authentification depuis le localStorage
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    // Définir les en-têtes avec le token d'authentification
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    // Envoi de la requête avec le paramètre exp dans l'URL
+    return this.http.post<User>(`${environment.playerApiUrl}/player/add-exp-user?exp=${amount}`, {}, { headers });
   }
 
   levelUp(): Observable<User> {
