@@ -7,6 +7,7 @@ Il repose sur une architecture microservices avec plusieurs APIs Restful :
 - **API Joueur** : Gestion des informations du joueur, niveau et expérience.
 - **API Monstres** : Gestion des monstres et de leurs statistiques.
 - **API Invocations** : Invocation aléatoire de monstres.
+- **API Combat** : Combat entre les différents Monstres.
 - **Frontend** : Application Angular permettant de tester l'application.
 
 ---
@@ -35,7 +36,8 @@ Gatcha-game27/
 ├── gatcha-frontend/      # Interface utilisateur
 ├── invocation-service/   # API Invocations
 ├── monster-service/      # API Monstres
-├── player-service/       # API Joueur          
+├── player-service/       # API Joueur
+├── fight-service/        # API Combat         
 └── README.md
 ```
 
@@ -45,6 +47,7 @@ Gatcha-game27/
 
 ### Prérequis
 - **Docker**
+- **Dans invcocation il y'a un monsters.json vous devez l'ajouter via swagger (localhost:8084) sur l'api invocation sur cet endpoint : /api/invocations/add/monsters**
 
 ### Lancer les services
 1. **Cloner le projet :**
@@ -67,6 +70,7 @@ Gatcha-game27/
       - Player Service : `localhost:8082/swagger-ui/index.html`
       - Monster Service : `localhost:8083/swagger-ui/index.html`
       - Invocation Service : `localhost:8084/swagger-ui/index.html`
+      - Fight Service : `localhost:8085/swagger-ui/index.html`
       
 
 ## 📊 Schéma des Interactions
