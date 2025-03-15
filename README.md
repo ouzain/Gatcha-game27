@@ -75,43 +75,8 @@ API combat n'a pas ete realise mais il y'a des endpoints dans monstres qui perme
 
 ## 📊 Schéma des Interactions
 
-```mermaid
-graph TD
-  subgraph Frontend
-    A1[UI Utilisateur]
-  end
+![image](https://github.com/user-attachments/assets/5ebeac91-0939-460b-bb1a-8b1ba4a03590)
 
-  subgraph Auth Service
-    A2[JWT Token Management]
-  end
-
-  subgraph Player Service
-    P1[Gestion Joueurs]
-  end
-
-  subgraph Monster Service
-    M1[Gestion Monstres]
-  end
-
-  subgraph Invocation Service
-    I1[Invocation de Monstres]
-  end
-
-  A1 -->|Authentification| A2
-  A1 -->|Gestion de Compte| P1
-  P1 -->|Vérification Token| A2
-  P1 -->|Invocation| I1
-  I1 -->|Monstre Invoqué| M1
-  I1 -->|Vérification Token| A2
-  M1 -->|ID Monstre| I1
-  I1 -->|Résultat| P1
-
-  style A1 fill:#1f77b4,stroke:#333,stroke-width:2px
-  style A2 fill:#ff7f0e,stroke:#333,stroke-width:2px
-  style P1 fill:#2ca02c,stroke:#333,stroke-width:2px
-  style M1 fill:#d62728,stroke:#333,stroke-width:2px
-  style I1 fill:#9467bd,stroke:#333,stroke-width:2px
-```
 
 ---
 ## 🧑‍🎮 API Joueur
