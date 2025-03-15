@@ -72,6 +72,7 @@ Fonctionnement:
 API invocation a les monstres de bases dans les conditions initiales, lorsque le user souhaite invoquer un monstre si son niveau lui permet d'en avoir un nouveau il appelle invocation qui choisie un monstre au hasard de sa base de monstre elle l'envoie à monstre qui l'enregistre et lui renvoie l'id du monstre si l'operation est reussi ou pas cela sera enregistre dans la bdd invocation avec le statut si c'est reussi ça renvoie à player l'id enregistre dans la bdd. 
 API combat n'a pas ete realise mais il y'a des endpoints dans monstres qui permettent la gestion des monstres à partir de combat.
 
+
 ## 📊 Schéma des Interactions
 
 ```mermaid
@@ -97,12 +98,13 @@ graph TD
   end
 
   A1 -->|Authentification| A2
-  A1 -->|Invocation| I1
   A1 -->|Gestion de Compte| P1
-  I1 -->|Vérification Token| A2
-  I1 -->|Monstre Invoqué| M1
   P1 -->|Vérification Token| A2
-  P1 -->|Gestion Monstres| M1
+  P1 -->|Invocation| I1
+  I1 -->|Monstre Invoqué| M1
+  I1 -->|Vérification Token| A2
+  M1 -->|ID Monstre| I1
+  I1 -->|Résultat| P1
 
   style A1 fill:#1f77b4,stroke:#333,stroke-width:2px
   style A2 fill:#ff7f0e,stroke:#333,stroke-width:2px
@@ -160,7 +162,4 @@ Aller sur l'api player sur swagger add user **POST**/api/player/add
 
 
 ---
-
-
-
 
