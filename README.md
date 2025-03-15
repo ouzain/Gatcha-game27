@@ -75,7 +75,8 @@ Gatcha-game27/
 
 ## 📊 Schéma des Interactions
 
-![image](https://github.com/user-attachments/assets/5ebeac91-0939-460b-bb1a-8b1ba4a03590)
+![image](https://github.com/user-attachments/assets/fbd0ed19-8e72-4a6f-8f27-c78bb90f1ae9)
+
 
 
 
