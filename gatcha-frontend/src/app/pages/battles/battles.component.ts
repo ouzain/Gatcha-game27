@@ -75,7 +75,7 @@ export class BattlesComponent implements OnInit {
         this.isLoadingBattles = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load battle history. Please try again.';
+        this.errorMessage = 'Échec du chargement de l\'historique des combats. Veuillez réessayer.';
         this.isLoadingBattles = false;
         console.error('Error loading battles:', error);
       }

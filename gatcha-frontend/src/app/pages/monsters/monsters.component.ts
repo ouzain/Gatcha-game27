@@ -8,7 +8,6 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { forkJoin } from 'rxjs';
 
-
 @Component({
   selector: 'app-monsters',
   standalone: true,
@@ -34,6 +33,7 @@ export class MonstersComponent implements OnInit {
 
   loadMonsters(): void {
     this.isLoading = true;
+    this.monsters = [];  // Réinitialiser la liste des monstres
 
     const username = this.authService.getUsername(); // Récupérer le username du joueur connecté
 
@@ -44,10 +44,12 @@ export class MonstersComponent implements OnInit {
           this.user = user;
           console.log('Joueur récupéré:', this.user);
 
-          // Vérifier que monsterList est défini
-          if (!this.user.monsterList) {
-            this.user.monsterList = []; // Initialisez la liste à vide si elle est undefined
+          // Vérifier que monsterList est défini et non nul
+          if (!this.user.monsterList || this.user.monsterList.length === 0) {
+            this.isLoading = false;
+            return;  // Si la liste est vide, ne pas appeler fetchMonstersByIds
           }
+
           // Charger les monstres en fonction des IDs récupérés
           const monsterIds = this.user.monsterList;
           this.fetchMonstersByIds(monsterIds);
@@ -65,6 +67,12 @@ export class MonstersComponent implements OnInit {
   }
 
   fetchMonstersByIds(monsterIds: number[]): void {
+    // Si monsterIds est vide, n'effectuez aucune requête
+    if (monsterIds.length === 0) {
+      this.isLoading = false;
+      return;
+    }
+
     // Récupérer les monstres en fonction des IDs
     const monsterRequests = monsterIds.map(id => this.monsterService.getMonster(id)); // Créer un tableau de requêtes
 
