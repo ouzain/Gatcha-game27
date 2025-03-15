@@ -99,7 +99,19 @@ services:
       - eureka-server
     networks:
       - microservices-net
-
+  fight-service:
+    build:
+      context: ../fight-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    environment:
+      - DB_HOST=mango
+    depends_on:
+      - mongo
+      - eureka-server
+    networks:
+      - microservices-net
   gatcha-frontend:
     build:
       context: ../gatcha-frontend

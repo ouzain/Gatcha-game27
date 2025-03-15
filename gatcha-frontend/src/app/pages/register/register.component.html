@@ -51,7 +51,7 @@
         </div>
         
         <div *ngIf="errorMessage" class="error-message mb-3">
-          {{ 'Erreur lors de l\'enregistrement, ouvrez les DevTools pour voir l\'erreur '  }}
+          {{ 'Erreur lors de l\'enregistrement, réessayez svp'  }}
         </div>
         
         <button type="submit" class="btn w-100" [disabled]="registerForm.invalid || isLoading">

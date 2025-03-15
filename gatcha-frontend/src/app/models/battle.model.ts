@@ -22,3 +22,4 @@ export interface BattleWithMonsters extends Battle {
   monster2?: Monster;
   winner?: Monster;
 }
+

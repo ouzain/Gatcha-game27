@@ -10,7 +10,7 @@ import { Battle, BattleWithMonsters } from '../models/battle.model';
 export class BattleService {
   constructor(private http: HttpClient) {}
 
-  startBattle(monster1Id: string, monster2Id: string): Observable<Battle> {
+  startBattle(monster1Id: number, monster2Id: number): Observable<Battle> {
     return this.http.post<Battle>(`${environment.combatApiUrl}/battles`, { monster1Id, monster2Id });
   }
 

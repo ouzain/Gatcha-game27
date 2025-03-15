@@ -48,6 +48,7 @@ public class UpdatePlayerServiceImpl extends AbstractPlayerService implements Up
 
     }
 
+
     @Override
     public boolean addExp(String token, int exp) {
         String playerUsername = getUsernameFromToken(token);
