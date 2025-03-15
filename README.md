@@ -81,10 +81,7 @@ Gatcha-game27/
 
 
 ## 💡 Contributeurs
-- **Ousmane DIALLO** 
-- **Amanie SAID**
-- **Enide DJENDER**
-- **Islem SADKI**
+
 
 
 ---
