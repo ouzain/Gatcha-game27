@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -13,10 +13,12 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   isAuthenticated$ = this.authService.isAuthenticated$;
   
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService , private router: Router) {}
   
   logout(event: Event): void {
     event.preventDefault();
     this.authService.logout();
+      // Redirection vers la page d'accueil
+      this.router.navigate(['']);
   }
 }
