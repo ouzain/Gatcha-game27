@@ -6,7 +6,8 @@ Il repose sur une architecture microservices avec plusieurs APIs interconnectée
 - **API d'authentification** : Génération et gestion de tokens pour l'authentification.
 - **API Joueur** : Gestion des informations du joueur, niveau et expérience.
 - **API Monstres** : Gestion des monstres et de leurs statistiques.
-- **API Invocations** : Invocation aléatoire de monstres.
+- **API Invocations** : Invocation aléatoire de monstres.*
+- **Frontend** : Frontend application.
 
 ---
 
@@ -50,7 +51,7 @@ project-root/
 ### Lancer les services
 1. **Cloner le projet :**
    ```bash
-   git clone https://github.com/username/monster-invocation.git
+   git clone https://github.com/ouzain/Gatcha-game27.git
    cd Gatcha-game27/
    ```
 2. **Lancer avec Docker Compose :**
@@ -99,19 +100,6 @@ Aller sur l'api player sur swagger add user **POST**/api/player/add
   ```json
   {
     "token": "player1-2025/03/15-14:25:30" ,
-  }
-  ```
-
----
-
-## 🌀 API d'Invocation
-### Invoquer un monstre
-**POST** `/api/invocations/summon`
-- **Réponse (200 OK) :**  
-  ```json
-  {
-    "message": "Invocation réussie",
-    "monsterId": 123
   }
   ```
 
